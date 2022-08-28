@@ -82,6 +82,12 @@ class DepartScreen extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, state) {
+        var cubit = NasaCubit.get(context);
+        if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond|| cubit.isDonePosts) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Padding(
           padding:  EdgeInsets.only(
             top: 12.h,

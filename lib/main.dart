@@ -11,6 +11,7 @@ import 'package:nasa_app/screens/login/onBoarding.dart';
 import 'package:nasa_app/shared/component.dart';
 import 'all_cubit/login_cubit/cubit.dart';
 import 'network/bloc_obserp.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,8 @@ void main() async {
   await CacheHelper.init();
   // DioHelper.init();
   await Firebase.initializeApp();
+  timeago.setLocaleMessages('en', timeago.EnMessages());
+  // timeago.setLocaleMessages('en_short', timeago.EnShortMessages());
 
   uId = await CacheHelper.getData(key: 'uId');
   bool? ifOnBoarding = CacheHelper.getData(key: 'onBoarding');
@@ -37,13 +40,9 @@ void main() async {
     widget = const OnBoarding();
   }
 
-// if(ifOnBoarding==null){
-//   ifOnBoarding=false;
-// }
 
   Bloc.observer = MyBlocObserver();
 
-  
   // runApp(DevicePreview(
   //  builder: (context) => MyApp(myHome: widget!)));
 
@@ -67,9 +66,12 @@ class MyApp extends StatelessWidget {
               create: (context) => LoginCubit(),
             ),
             BlocProvider(
-              create: (context) => NasaCubit()..checkInternet()
+              create: (context) => NasaCubit()
+                ..checkInternet()
                 ..getUserData()
-                ..getSomeSecond()..getNasa()..getPosts(),
+                ..getSomeSecond()
+                ..getNasa()
+                ..getPosts(),
             ),
           ],
           child: MaterialApp(

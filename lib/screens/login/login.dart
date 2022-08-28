@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/screens/login/register.dart';
 import 'package:nasa_app/shared/component.dart';
 
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen>with SingleTickerProviderState
       listener: (context, state) async{
 
         if (state is LoginSuccessState) {
-        await  showDialog(
+        await showDialog(
               barrierDismissible: false,
               context: context,
               builder: (context) {
@@ -101,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen>with SingleTickerProviderState
                   builder: (context) => const NasaLayout(),
                 ),
                 (route) => false);
+            NasaCubit.get(context).getUserData();
             controllerEmail_.clear();
             controllerPassword_.clear();
           });

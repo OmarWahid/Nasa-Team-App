@@ -6,6 +6,7 @@ class PostModel {
   String? imagePost;
   String? text;
   bool? like;
+  int? idPost;
 
   PostModel({
     this.name,
@@ -15,6 +16,7 @@ class PostModel {
     this.imagePost,
     this.text,
     this.like,
+    this.idPost,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
@@ -25,6 +27,7 @@ class PostModel {
         imagePost: json["imagePost"],
         text: json["text"],
         like: json["like"],
+        idPost: json["idPost"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,6 +38,7 @@ class PostModel {
         "imagePost": imagePost,
         "text": text,
         "like": like,
+        "idPost": idPost,
       };
 }
 

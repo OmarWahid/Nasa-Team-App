@@ -36,8 +36,12 @@ class _SettingScreenState extends State<SettingScreen> {
         }
       },
       builder: (context, state) {
-        if (state is LoadingGetUserData) {
-          return Center(child: CircularProgressIndicator());
+
+        var cubit = NasaCubit.get(context);
+        if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond|| cubit.isDonePosts) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         final assetsAudioPlayer = AssetsAudioPlayer();

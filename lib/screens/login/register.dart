@@ -7,6 +7,7 @@ import 'package:nasa_app/all_cubit/login_cubit/states.dart';
 import 'package:nasa_app/layout/home_layout.dart';
 
 import '../../all_cubit/login_cubit/cubit.dart';
+import '../../all_cubit/shop_cubit/cubit_shop.dart';
 
 var formKey = GlobalKey<FormState>();
 
@@ -93,7 +94,9 @@ class _RegisterScreenState extends State<RegisterScreen>
               MaterialPageRoute(
                 builder: (context) => const NasaLayout(),
               ),
-              (route) => false);
+                  (route) => false);
+          NasaCubit.get(context).getUserData();
+
           phoneController.clear();
           nameController.clear();
           passwordController.clear();
@@ -111,15 +114,24 @@ class _RegisterScreenState extends State<RegisterScreen>
         }
       },
       builder: (context, state) {
-        var width = MediaQuery.of(context).size.width;
-        var height = MediaQuery.of(context).size.height -
-            MediaQuery.of(context).padding.top;
+        var width = MediaQuery
+            .of(context)
+            .size
+            .width;
+        var height = MediaQuery
+            .of(context)
+            .size
+            .height -
+            MediaQuery
+                .of(context)
+                .padding
+                .top;
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             leading: Padding(
-              padding: EdgeInsets.only(top: 19.h),
+              padding: EdgeInsets.only(top: 20.5.h, left: width * 0.055),
               child: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -154,7 +166,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                         children: [
                           Text(
                             'REGISTER',
-                            style: Theme.of(context)
+                            style: Theme
+                                .of(context)
                                 .textTheme
                                 .headline4!
                                 .copyWith(color: Colors.black),
@@ -162,9 +175,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                           Text(
                             'Register in Our Team Now 👾',
                             style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      color: Colors.grey,
-                                    ),
+                            Theme
+                                .of(context)
+                                .textTheme
+                                .caption!
+                                .copyWith(
+                              color: Colors.grey,
+                            ),
                           ),
                           SizedBox(
                             height: height * 0.035,
@@ -186,7 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               ),
                               // labelStyle: TextStyle(color: Colors.white),
                               contentPadding:
-                                  EdgeInsets.symmetric(vertical: 12.h),
+                              EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.r),
                               ),
@@ -194,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             keyboardType: TextInputType.name,
                           ),
                           SizedBox(
-                            height: height * 0.019,
+                            height: height * 0.026,
                           ),
                           TextFormField(
                             controller: phoneController,
@@ -208,7 +225,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               label: Text("Phone"),
                               prefixIcon: Icon(Icons.phone),
                               contentPadding:
-                                  EdgeInsets.symmetric(vertical: 12.h),
+                              EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.r),
                               ),
@@ -216,7 +233,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             keyboardType: TextInputType.phone,
                           ),
                           SizedBox(
-                            height: height * 0.019,
+                            height: height * 0.026,
                           ),
 
                           TextFormField(
@@ -231,7 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               label: Text("Email Address"),
                               prefixIcon: Icon(Icons.email_outlined),
                               contentPadding:
-                                  EdgeInsets.symmetric(vertical: 12.h),
+                              EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.r),
                               ),
@@ -239,7 +256,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             keyboardType: TextInputType.emailAddress,
                           ),
                           SizedBox(
-                            height: height * 0.019,
+                            height: height * 0.026,
                           ),
                           //password form field
                           TextFormField(
@@ -253,7 +270,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                             onFieldSubmitted: (value) {
                               if (formKey.currentState!.validate()) {
                                 LoginCubit.get(context).registerUser(
-                                  name: nameController.text,
+                                  name: (nameController.text.endsWith(' '))
+                                      ? nameController.text.substring(
+                                      0, nameController.text.lastIndexOf(' '))
+                                      : nameController.text,
                                   email: emailController.text,
                                   password: passwordController.text,
                                   phone: phoneController.text,
@@ -264,7 +284,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               label: const Text("Password"),
                               prefixIcon: const Icon(Icons.lock_outline),
                               contentPadding:
-                                  EdgeInsets.symmetric(vertical: 12.h),
+                              EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.r),
                               ),
@@ -274,48 +294,56 @@ class _RegisterScreenState extends State<RegisterScreen>
                                       .changeVisibilityPassReg();
                                 },
                                 icon: Icon(
-                                  LoginCubit.get(context).iconReg,
+                                  LoginCubit
+                                      .get(context)
+                                      .iconReg,
                                 ),
                               ),
                             ),
                             keyboardType: TextInputType.visiblePassword,
-                            obscureText: LoginCubit.get(context).isPassReg,
+                            obscureText: LoginCubit
+                                .get(context)
+                                .isPassReg,
                           ),
                           SizedBox(
-                            height: height * 0.035,
+                            height: height * 0.037,
                           ),
 
                           (state is! ShopRegisterLoadingState)
                               ? Container(
-                                  width: double.infinity,
-                                  height: height * 0.075,
-                                  decoration: BoxDecoration(
-                                    color: Colors.deepPurple,
-                                    borderRadius: BorderRadius.circular(15.r),
-                                  ),
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      if (formKey.currentState!.validate()) {
-                                        LoginCubit.get(context).registerUser(
-                                          name: nameController.text,
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                          phone: phoneController.text,
-                                        );
-                                      }
-                                    },
-                                    child: const Text(
-                                      'REGISTER',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                )
+                            width: double.infinity,
+                            height: height * 0.075,
+                            decoration: BoxDecoration(
+                              color: Colors.deepPurple,
+                              borderRadius: BorderRadius.circular(15.r),
+                            ),
+                            child: MaterialButton(
+                              onPressed: () {
+
+                                if (formKey.currentState!.validate()) {
+                                  LoginCubit.get(context).registerUser(
+                                    name: (nameController.text.endsWith(' '))
+                                        ? nameController.text.substring(
+                                        0, nameController.text.lastIndexOf(' '))
+                                        : nameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    phone: phoneController.text,
+                                  );
+                                }
+                              },
+                              child: const Text(
+                                'REGISTER',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
                               : const Center(
-                                  child: CircularProgressIndicator()),
+                              child: CircularProgressIndicator()),
                           SizedBox(
                             height: height * 0.03,
                           ),

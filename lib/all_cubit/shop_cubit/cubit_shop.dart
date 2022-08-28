@@ -62,6 +62,7 @@ class NasaCubit extends Cubit<NasaState> {
       userData = SocialModel.fromJson(value.data()!);
 
       print(FirebaseAuth.instance.currentUser!.email);
+      print(userData!.name);
       print('///////////////////////////////////////////////////////');
       print(userData);
       isDoneUser = false;
@@ -305,31 +306,23 @@ class NasaCubit extends Cubit<NasaState> {
     emit(GetIdPostsTest());
   }
 
-
   bool isDonePosts = true;
 
   List<String> postsId = [];
   List<PostModel> posts = [];
-  List<int> postsLikes = [];
-  List<int> postsCommentCount = [];
-  List<CommentModel> postsComment = [];
 
   void getPosts() {
     emit(LoadingGetPosts());
-    FirebaseFirestore.instance.collection('posts').get().then((value) {
-      value.docs.forEach((element) {
-        element.reference.collection('likes').get().then((value) {
-          postsLikes.add(value.docs.length);
-          posts.add(PostModel.fromJson(element.data()));
-          postsId.add(element.id);
-        });
-        element.reference.collection('comments').get().then((value) {
-          value.docs.forEach((element) {
-            postsCommentCount.add(value.docs.length);
-            postsComment.add(CommentModel.fromJson(element.data()));
-          });
-        });
-      });
+    FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('idPost')
+        .get()
+        .then((value) {
+      posts = [];
+      for (var element in value.docs) {
+        postsId.add(element.id);
+        posts.add(PostModel.fromJson(element.data()));
+      }
       isDonePosts = false;
       emit(SuccessGetPosts());
     }).onError((error, stackTrace) {
@@ -338,8 +331,25 @@ class NasaCubit extends Cubit<NasaState> {
     });
   }
 
+  // void getPosts() {
+  //   emit(LoadingGetPosts());
+  //   FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .orderBy('idPost')
+  //       .snapshots()
+  //       .listen((event) {
+  //     posts = [];
+  //     for (var element in event.docs) {
+  //       postsId.add(element.id);
+  //       posts.add(PostModel.fromJson(element.data()));
+  //     }
+  //     isDonePosts = false;
+  //     emit(SuccessGetPosts());
+  //   });
+  // }
 
   bool isLiked = false;
+
   void likePost(String postId) {
     FirebaseFirestore.instance
         .collection('posts')
@@ -363,15 +373,16 @@ class NasaCubit extends Cubit<NasaState> {
             .then((value) {
           // posts[index].like = false;
           isLiked = false;
-          FirebaseFirestore.instance
-              .collection('posts')
-              .doc(postId)
-              .get()
-              .then((value) {
-            value.reference.update({
-              'like': false,
-            });
-          });
+
+          // FirebaseFirestore.instance
+          //     .collection('posts')
+          //     .doc(postId)
+          //     .get()
+          //     .then((value) {
+          //   value.reference.update({
+          //     'like': false,
+          //   });
+          // });
 
           emit(SuccessLikePosts());
         }).onError((error, stackTrace) {
@@ -391,15 +402,16 @@ class NasaCubit extends Cubit<NasaState> {
         }).then((value) {
           // posts[index].like = true;
 
-          FirebaseFirestore.instance
-              .collection('posts')
-              .doc(postId)
-              .get()
-              .then((value) {
-            value.reference.update({
-              'like': true,
-            });
-          });
+          // FirebaseFirestore.instance
+          //     .collection('posts')
+          //     .doc(postId)
+          //     .get()
+          //     .then((value) {
+          //   value.reference.update({
+          //     'like': true,
+          //   });
+          // });
+
           // posts[index].like = true;
           emit(SuccessLikePosts());
         }).onError((error, stackTrace) {
@@ -426,15 +438,14 @@ class NasaCubit extends Cubit<NasaState> {
       name: userData!.name,
       image: userData!.image,
       text: text,
-      time: DateFormat(
-          'MMM d, hh:mm aaa'
-      ).format(DateTime.now()),
+      time: DateTime.now().toString(),
       uId: userData!.uId,
     );
     FirebaseFirestore.instance
         .collection('posts')
         .doc(postId)
-        .collection('comments').add(commentModel!.toJson())
+        .collection('comments')
+        .add(commentModel!.toJson())
         .then((value) {
       isComment = false;
       emit(SuccessCommentPosts());
