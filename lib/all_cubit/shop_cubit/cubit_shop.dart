@@ -7,9 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import 'package:nasa_app/model/login_model.dart';
 import 'package:nasa_app/model/member_model.dart';
+import 'package:nasa_app/model/posts_model.dart';
 import 'package:nasa_app/network/cache_helper.dart';
 import 'package:nasa_app/screens/department.dart';
 import 'package:nasa_app/screens/news.dart';
@@ -46,7 +48,7 @@ class NasaCubit extends Cubit<NasaState> {
     emit(changeIndexButton());
   }
 
-  SocialModel? model;
+  SocialModel? userData;
 
   bool isDoneUser = true;
 
@@ -57,19 +59,17 @@ class NasaCubit extends Cubit<NasaState> {
         .doc(uId)
         .get()
         .then((value) {
-      model = SocialModel.fromJson(value.data()!);
+      userData = SocialModel.fromJson(value.data()!);
 
       print(FirebaseAuth.instance.currentUser!.email);
       print('///////////////////////////////////////////////////////');
-      print(model);
+      print(userData);
       isDoneUser = false;
       emit(SuccessGetUserData());
     }).catchError((error) {
       emit(ErrorGetUserData(error: error.toString()));
     });
   }
-
-  MemberModel? memberModel;
 
   // Future getNasaMemberData(index) async {
   //   await FirebaseFirestore.instance
@@ -110,18 +110,18 @@ class NasaCubit extends Cubit<NasaState> {
     required String phone,
   }) async {
     SocialModel socialModel = SocialModel(
-      email: model!.email,
+      email: userData!.email,
       name: name,
       phone: phone,
-      image: (imageProfileUrl == '') ? model!.image : imageProfileUrl,
-      uId: model!.uId,
+      image: (imageProfileUrl == '') ? userData!.image : imageProfileUrl,
+      uId: userData!.uId,
       bio: bio,
       isVar: false,
     );
 
     FirebaseFirestore.instance
         .collection('users')
-        .doc(model!.uId)
+        .doc(userData!.uId)
         .update(socialModel.toJson())
         .then((value) async {
       await getUserData();
@@ -288,6 +288,7 @@ class NasaCubit extends Cubit<NasaState> {
 
   late StreamSubscription<ConnectivityResult> subscription;
   ConnectivityResult status = ConnectivityResult.mobile;
+
   void checkInternet() {
     subscription = Connectivity()
         .onConnectivityChanged
@@ -297,5 +298,150 @@ class NasaCubit extends Cubit<NasaState> {
     });
   }
 
+  String postIdTest = '';
 
+  void getIdPostsTest(String id) {
+    postIdTest = id;
+    emit(GetIdPostsTest());
+  }
+
+
+  bool isDonePosts = true;
+
+  List<String> postsId = [];
+  List<PostModel> posts = [];
+  List<int> postsLikes = [];
+  List<int> postsCommentCount = [];
+  List<CommentModel> postsComment = [];
+
+  void getPosts() {
+    emit(LoadingGetPosts());
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
+      value.docs.forEach((element) {
+        element.reference.collection('likes').get().then((value) {
+          postsLikes.add(value.docs.length);
+          posts.add(PostModel.fromJson(element.data()));
+          postsId.add(element.id);
+        });
+        element.reference.collection('comments').get().then((value) {
+          value.docs.forEach((element) {
+            postsCommentCount.add(value.docs.length);
+            postsComment.add(CommentModel.fromJson(element.data()));
+          });
+        });
+      });
+      isDonePosts = false;
+      emit(SuccessGetPosts());
+    }).onError((error, stackTrace) {
+      print(error);
+      emit(ErrorGetPosts());
+    });
+  }
+
+
+  bool isLiked = false;
+  void likePost(String postId) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        if (element.id == userData!.uId) {
+          isLiked = true;
+        }
+      }
+      print(isLiked);
+      if (isLiked) {
+        FirebaseFirestore.instance
+            .collection('posts')
+            .doc(postId)
+            .collection('likes')
+            .doc(userData!.uId)
+            .delete()
+            .then((value) {
+          // posts[index].like = false;
+          isLiked = false;
+          FirebaseFirestore.instance
+              .collection('posts')
+              .doc(postId)
+              .get()
+              .then((value) {
+            value.reference.update({
+              'like': false,
+            });
+          });
+
+          emit(SuccessLikePosts());
+        }).onError((error, stackTrace) {
+          print(error);
+          isLiked = false;
+
+          emit(ErrorLikePosts());
+        });
+      } else {
+        FirebaseFirestore.instance
+            .collection('posts')
+            .doc(postId)
+            .collection('likes')
+            .doc(userData!.uId)
+            .set({
+          'like': true,
+        }).then((value) {
+          // posts[index].like = true;
+
+          FirebaseFirestore.instance
+              .collection('posts')
+              .doc(postId)
+              .get()
+              .then((value) {
+            value.reference.update({
+              'like': true,
+            });
+          });
+          // posts[index].like = true;
+          emit(SuccessLikePosts());
+        }).onError((error, stackTrace) {
+          print(error);
+          emit(ErrorLikePosts());
+        });
+      }
+    }).onError((error, stackTrace) {
+      print(error);
+      emit(ErrorLikePosts());
+    });
+  }
+
+  bool isComment = false;
+  CommentModel? commentModel;
+
+  void commentPost({
+    required String postId,
+    required String text,
+  }) {
+    isComment = true;
+    emit(LoadingCommentPosts());
+    commentModel = CommentModel(
+      name: userData!.name,
+      image: userData!.image,
+      text: text,
+      time: DateFormat(
+          'MMM d, hh:mm aaa'
+      ).format(DateTime.now()),
+      uId: userData!.uId,
+    );
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments').add(commentModel!.toJson())
+        .then((value) {
+      isComment = false;
+      emit(SuccessCommentPosts());
+    }).onError((error, stackTrace) {
+      print(error);
+      isComment = false;
+      emit(ErrorCommentPosts());
+    });
+  }
 }

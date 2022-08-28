@@ -56,3 +56,17 @@ class ErrorNasaData extends NasaState {}
 class LoadingNasaData extends NasaState {}
 
 class CheckConnectState extends NasaState {}
+
+class LoadingGetPosts extends NasaState {}
+class SuccessGetPosts extends NasaState {}
+class ErrorGetPosts extends NasaState {}
+
+class LoadingLikePosts extends NasaState {}
+class SuccessLikePosts extends NasaState {}
+class ErrorLikePosts extends NasaState {}
+
+class LoadingCommentPosts extends NasaState {}
+class SuccessCommentPosts extends NasaState {}
+class ErrorCommentPosts extends NasaState {}
+
+class GetIdPostsTest extends NasaState {}

@@ -14,6 +14,10 @@ import 'network/bloc_obserp.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   await CacheHelper.init();
   // DioHelper.init();
   await Firebase.initializeApp();
@@ -65,7 +69,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => NasaCubit()..checkInternet()
                 ..getUserData()
-                ..getSomeSecond()..getNasa(),
+                ..getSomeSecond()..getNasa()..getPosts(),
             ),
           ],
           child: MaterialApp(

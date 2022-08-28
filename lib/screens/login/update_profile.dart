@@ -127,6 +127,15 @@ class UpdateScreen_ extends StatelessWidget {
                                 child: FittedBox(
                                   child: IconButton(
                                       onPressed: () {
+                                        Fluttertoast.showToast(
+                                          msg: 'Plz select image size 1:1',
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.TOP,
+                                          timeInSecForIosWeb: 5,
+                                          backgroundColor: Colors.deepPurpleAccent,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0,
+                                        );
                                         NasaCubit.get(context).getProfileData();
                                       },
                                       icon: Icon(

@@ -42,7 +42,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
         final assetsAudioPlayer = AssetsAudioPlayer();
 
-        nasa = NasaCubit.get(context).model;
+        nasa = NasaCubit.get(context).userData;
         return ListView(
           physics: BouncingScrollPhysics(),
           shrinkWrap: true,
@@ -63,7 +63,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             backgroundColor: Colors.white,
                             child: ClipOval(
                               child: Image.network(
-                                NasaCubit.get(context).model!.image!,
+                                NasaCubit.get(context).userData!.image!,
                                 fit: BoxFit.cover,
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
@@ -103,7 +103,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     SizedBox(height: height * 0.025),
                     Text(
-                      NasaCubit.get(context).model!.name!,
+                      NasaCubit.get(context).userData!.name!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         height: 0.9.h,
@@ -111,7 +111,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(NasaCubit.get(context).model!.bio!,
+                    Text(NasaCubit.get(context).userData!.bio!,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           height: 1.4.h,

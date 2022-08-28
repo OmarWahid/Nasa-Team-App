@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,7 +49,7 @@ class HEADS_screen extends StatelessWidget {
                     height: 13,
                   );
                 },
-                itemCount: 5),
+                itemCount: 6),
           ),
         );
       },
@@ -69,16 +70,36 @@ class HEADS_screen extends StatelessWidget {
               top: 10.h,
               bottom: 10.h,
             ),
+            // child: Container(
+            //   height: 109.h,
+            //   width: 116.w,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(18),
+            //     image: DecorationImage(
+            //       image: NetworkImage( data['image']),
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            // ),
             child: Container(
               height: 109.h,
               width: 116.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                image: DecorationImage(
-                  image: AssetImage('assets/images/Making art-cuate.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18.r),
+                  child: Image.network(data['image'], fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(child: CupertinoActivityIndicator(
+                      color: Colors.white,
+                      radius: 12.r,
+                    ));
+                  }, errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/images/Making art-cuate.png',
+                      fit: BoxFit.cover,
+                    );
+                  })),
             ),
           ),
           SizedBox(
