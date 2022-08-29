@@ -99,11 +99,18 @@ class LoginCubit extends Cubit<LoginState> {
 
   bool isPassReg = true;
   IconData iconReg = Icons.visibility_outlined;
-
   void changeVisibilityPassReg() {
     isPassReg = !isPassReg;
     iconReg =
         isPassReg ? Icons.visibility_outlined : Icons.visibility_off_outlined;
     emit(ChangePassVisibilityStateReg());
+  }
+  bool isPassConfirm = true;
+  IconData iconConfirm = Icons.visibility_outlined;
+  void changeVisibilityPassConfirm() {
+    isPassConfirm = !isPassConfirm;
+    iconConfirm =
+        isPassConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined;
+    emit(changeVisibilityPassConfirmm());
   }
 }

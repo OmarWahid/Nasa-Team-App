@@ -64,7 +64,6 @@ class NasaCubit extends Cubit<NasaState> {
       print(FirebaseAuth.instance.currentUser!.email);
       print(userData!.name);
       print('///////////////////////////////////////////////////////');
-      print(userData);
       isDoneUser = false;
       emit(SuccessGetUserData());
     }).catchError((error) {
@@ -150,100 +149,7 @@ class NasaCubit extends Cubit<NasaState> {
       emit(ErrorLogoutData());
     });
 
-    // UserData? userData;
-    //
-    // void getUserData()  {
-    //   emit(LoadingGetUserData());
-    //
-    //   FirebaseFirestore.instance
-    //       .collection('users')
-    //       .doc(token)
-    //       .get()
-    //       .then((value) {
-    //    // userData = UserData.fromJson(value.data()!);
-    //     print(value.data());
-    //    print(token);
-    //    print('///////////////////////////////////////////////////////////////////');
-    //     print(userData!.email);
-    //     emit(SuccessGetUserData());
-    //   }).onError((error, stackTrace) {
-    //     print(error);
-    //     emit(ErrorGetUserData(error: error.toString()));
-    //   });
-    // }
-    //
-    //
-    // Future<void> logout(context) async {
-    //   await FirebaseAuth.instance.signOut().then((value) {
-    //     CacheHelper.removeData(key: 'token').then((value) {
-    //       Navigator.pushAndRemoveUntil(
-    //         context,
-    //         MaterialPageRoute(
-    //           builder: (context) => const LoginScreen(),
-    //         ),
-    //             (route) => false,
-    //       );
-    //       token='';
-    //     });
-    //
-    //     emit(SuccessLogoutData());
-    //   }).catchError((error) {
-    //     emit(ErrorLogoutData());
-    //   });
-    // }
-    //
 
-    // LoginModel ?UserDatas;
-    // void getProfileData() {
-    //   emit(LoadingProfileData());
-    //   DioHelper.getData(
-    //     url: 'profile',
-    //     token: token,
-    //   ).then((value) {
-    //     UserDatas = LoginModel.fromJson(value.data);
-    //     print(UserDatas!.data!.name);
-    //     emit(SuccessProfileData());
-    //   }).catchError((error) {
-    //     print(error.toString());
-    //     emit(ErrorProfileData());
-    //   });
-    // }
-
-    // void getUpdateData({
-    //   required String name,
-    //   required String email,
-    //   required String phone,
-    //   String? password,
-    // }) {
-    //   emit(LoadingUpdateData());
-    //   DioHelper.putData(
-    //     url: 'update-profile',
-    //     token: token,
-    //     data: {
-    //       'name': name,
-    //       'email': email,
-    //       'phone': phone,
-    //       'password': password,
-    //     },
-    //   ).then((value) {
-    //     UserDatas = LoginModel.fromJson(value.data);
-    //     print(UserDatas!.data!.name);
-    //     Fluttertoast.showToast(
-    //         msg: "Update Successfully ✔",
-    //         toastLength: Toast.LENGTH_LONG,
-    //         gravity: ToastGravity.BOTTOM,
-    //         timeInSecForIosWeb: 1,
-    //         backgroundColor: Colors.green,
-    //         textColor: Colors.white,
-    //         fontSize: 16.0
-    //     );
-    //
-    //     emit(SuccessUpdateData(UserDatas!));
-    //   }).catchError((error) {
-    //     print(error.toString());
-    //     emit(ErrorUpdateData());
-    //   });
-    // }
   }
 
   File? profileImage;

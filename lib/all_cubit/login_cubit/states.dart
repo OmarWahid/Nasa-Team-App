@@ -31,6 +31,8 @@ class ChangePassVisibilityState extends LoginState {}
 
 class ChangePassVisibilityStateReg extends LoginState {}
 
+class changeVisibilityPassConfirmm extends LoginState {}
+
 class ChangeEmailSuccess extends LoginState {}
 
 class ChangePassSuccess extends LoginState {}

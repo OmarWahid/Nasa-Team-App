@@ -74,10 +74,10 @@ class UpdateScreen_ extends StatelessWidget {
           ),
         );
 
-        if (state is LoadingSecond ||
-            state is LoadingGetUserData ||
-            state is LoadingUploadProfileUrl||
-            state is LoadingNasaData) {
+        if (
+            state is LoadingGetUserData||
+            state is LoadingUploadProfileUrl
+            ) {
           return Scaffold(
             appBar: appBar,
             body: Center(
@@ -86,9 +86,9 @@ class UpdateScreen_ extends StatelessWidget {
           );
         }
 
-        controllerBio.text = nasa.bio;
-        controllerPhone.text = nasa.phone;
-        controllerName.text = nasa.name;
+        controllerBio.text = NasaCubit.get(context).userData!.bio!;
+        controllerPhone.text = NasaCubit.get(context).userData!.phone!;
+        controllerName.text = NasaCubit.get(context).userData!.name!;
         var image = NasaCubit.get(context).profileImage;
 
         return WillPopScope(

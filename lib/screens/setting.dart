@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import 'package:nasa_app/screens/login/update_profile.dart';
+import 'package:nasa_app/style/capital_letter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../all_cubit/shop_cubit/cubit_shop.dart';
@@ -36,9 +37,11 @@ class _SettingScreenState extends State<SettingScreen> {
         }
       },
       builder: (context, state) {
-
         var cubit = NasaCubit.get(context);
-        if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond|| cubit.isDonePosts) {
+        if (cubit.isDoneUser ||
+            cubit.isDoneNasa ||
+            cubit.isDoneSecond ||
+            cubit.isDonePosts) {
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -97,6 +100,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     if (refresh == 'refresh') {
                                       NasaCubit.get(context).getUserData();
                                     }
+
                                   },
                                   icon: Icon(
                                     Icons.add_a_photo_outlined,

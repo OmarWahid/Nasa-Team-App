@@ -359,7 +359,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             fontSize: 11.h,
                             height: 1.1.h,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black87,
+                            color: Colors.black.withOpacity(0.7),
                           )),
                     ],
                   ),
