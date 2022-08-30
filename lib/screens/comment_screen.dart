@@ -6,8 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import '../model/posts_model.dart';
 
+import '../model/posts_model.dart';
+import '../style/iCONS.dart';
+
+var scrollController = ScrollController();
 var commentController = TextEditingController();
 var formKey = GlobalKey<FormState>();
 String yourComment = '';
@@ -118,31 +121,32 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
             ),
             body: Center(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 16.w,
-                  right: 16.w,
-                ),
-                child: Column(
-                  children: [
-                    StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('posts')
-                            .doc(NasaCubit.get(context).postIdTest)
-                            .collection('comments')
-                            .orderBy('time', descending: true)
-                            .snapshots(),
-                        builder:
-                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          List<CommentModel> comments = [];
+              child: Column(
+                children: [
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(NasaCubit.get(context).postIdTest)
+                          .collection('comments')
+                          .orderBy('time', descending: true)
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        List<CommentModel> comments = [];
 
-                          if (snapshot.hasData) {
-                            for (var element in snapshot.data!.docs) {
-                              comments.add(CommentModel.fromJson(
-                                  element.data() as Map<String, dynamic>));
-                            }
-                            return Expanded(
+                        if (snapshot.hasData) {
+                          for (var element in snapshot.data!.docs) {
+                            comments.add(CommentModel.fromJson(
+                                element.data() as Map<String, dynamic>));
+                          }
+                          return Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 16.w,
+                                right: 16.w,
+                              ),
                               child: ListView.separated(
+                                controller: scrollController,
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return buildCommentItem(
@@ -153,25 +157,36 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                 ),
                                 itemCount: snapshot.data!.docs.length,
                               ),
-                            );
-                          } else {
-                            return Expanded(
-                              child: const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-                        }),
-                    Container(
-                      color: Colors.white,
-                      height: 45.h,
+                            ),
+                          );
+                        } else {
+                          return Expanded(
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                      }),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 13.w,
+                      right: 13.w,
+                      bottom: 7.h,
+                      top: 6.h,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 1.w),
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
                       child: Row(
                         children: [
                           Expanded(
+                            //message form field
                             child: Padding(
-                              padding: EdgeInsets.only(
-                                left: 10.w,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 15.w),
                               child: TextFormField(
                                 controller: commentController,
                                 cursorColor: Colors.black,
@@ -180,7 +195,16 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                       value != ' ' &&
                                       value != '  ' &&
                                       value != '   ' &&
-                                      value != '    ') {
+                                      value != '    ' &&
+                                      value != '     ' &&
+                                      value != '      ' &&
+                                      value != '       ') {
+                                    scrollController.animateTo(
+                                        scrollController
+                                            .position.minScrollExtent,
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        curve: Curves.easeOut);
                                     NasaCubit.get(context).commentPost(
                                         text: yourComment,
                                         postId:
@@ -193,7 +217,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                   });
                                 },
                                 decoration: const InputDecoration(
-                                  hintText: 'Write a comment ...',
+                                  hintText: 'Comment ...',
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -209,30 +233,44 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                     radius: 12.w,
                                   ),
                                 )
-                              : IconButton(
-                                  highlightColor: Colors.white,
-                                  splashColor: Colors.white,
-                                  icon: Icon(
-                                    Icons.send_rounded,
-                                    size: 24.w,
+                              : Container(
+                                  height: 49.h,
+                                  color: Colors.black.withOpacity(0.9),
+                                  child: MaterialButton(
+                                    minWidth: 1.0,
+                                    onPressed: () {
+                                      if (yourComment.isNotEmpty &&
+                                          yourComment != ' ' &&
+                                          yourComment != '  ' &&
+                                          yourComment != '   ' &&
+                                          yourComment != '    ' &&
+                                          yourComment != '     ' &&
+                                          yourComment != '      ' &&
+                                          yourComment != '       ') {
+                                        scrollController.animateTo(
+                                            scrollController
+                                                .position.minScrollExtent,
+                                            duration: const Duration(
+                                                milliseconds: 300),
+                                            curve: Curves.easeOut);
+                                        NasaCubit.get(context).commentPost(
+                                            text: yourComment,
+                                            postId: NasaCubit.get(context)
+                                                .postIdTest);
+                                      }
+                                    },
+                                    child: Icon(
+                                      IconBroken.Send,
+                                      size: 22.w,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    if (yourComment.isNotEmpty &&
-                                        yourComment != ' ' &&
-                                        yourComment != '  ' &&
-                                        yourComment != '   ' &&
-                                        yourComment != '    ') {
-                                      NasaCubit.get(context).commentPost(
-                                          text: yourComment,
-                                          postId: NasaCubit.get(context)
-                                              .postIdTest);
-                                    }
-                                  }),
+                                )
                         ],
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

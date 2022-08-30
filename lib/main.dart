@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/layout/home_layout.dart';
 import 'package:nasa_app/network/cache_helper.dart';
@@ -13,6 +15,12 @@ import 'all_cubit/login_cubit/cubit.dart';
 import 'network/bloc_obserp.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async
+{
+  print('on background message');
+  print(message.data.toString());
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -22,6 +30,28 @@ void main() async {
   await CacheHelper.init();
   // DioHelper.init();
   await Firebase.initializeApp();
+
+  var token = await FirebaseMessaging.instance.getToken();
+  print(token);
+
+  // foreground fcm
+  FirebaseMessaging.onMessage.listen((event)
+  {
+    print('on message');
+    print(event.data.toString());
+
+  });
+
+  // when click on notification to open app
+  FirebaseMessaging.onMessageOpenedApp.listen((event)
+  {
+    print('on message opened app');
+    print(event.data.toString());
+  });
+
+  // background fcm
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
   timeago.setLocaleMessages('en', timeago.EnMessages());
   // timeago.setLocaleMessages('en_short', timeago.EnShortMessages());
 
