@@ -60,7 +60,7 @@ List<DeepModel> list = [
   ),
   DeepModel(
     image: 'assets/images/Making art-cuate.png',
-    title: 'Art Committee',
+    title: 'Art & Design',
     description: 'ART',
     widget: ART_screen(),
   ),
@@ -83,11 +83,7 @@ class DepartScreen extends StatelessWidget {
       },
       builder: (context, state) {
         var cubit = NasaCubit.get(context);
-        if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond|| cubit.isDonePosts) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+
         return Padding(
           padding:  EdgeInsets.only(
             top: 12.h,
@@ -97,15 +93,15 @@ class DepartScreen extends StatelessWidget {
           ),
           child: ListView.separated(
             physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => (NasaCubit.get(context).isLoading)
-                ? FadeAnimation(
-                    (index == 6 || index == 5)
-                        ? (index == 5)
-                            ? (index - 2)
-                            : (index - 5)
-                        : (index - 0.24),
-                    _buildItem(list[index], context))
-                : getItemShimmer(),
+            itemBuilder: (context, index) => (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond|| cubit.isDonePosts)
+                ? getItemShimmer()
+                : FadeAnimation(
+              (index == 6 || index == 5)
+                  ? (index == 5)
+                  ? (index - 1)
+                  : (index - 4.9)
+                  : (index - 0.269),
+              _buildItem(list[index], context)),
       separatorBuilder: (context, index) =>  SizedBox(height: 13.h,),
             itemCount: list.length,
           ),

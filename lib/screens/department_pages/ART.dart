@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
+
+import '../../style/iCONS.dart';
 
 class ART_screen extends StatelessWidget {
   const ART_screen({Key? key}) : super(key: key);
@@ -15,10 +18,47 @@ class ART_screen extends StatelessWidget {
       builder: (context, state) {
         var appbar = AppBar(
           centerTitle: true,
-          backgroundColor: Colors.deepPurple,
-          title: const Text('Art Committee',
+          elevation: 0,
+          toolbarHeight: ScreenUtil().setHeight(48),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(45.r),
+                bottomRight: Radius.circular(45.r),
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.deepPurple, Colors.deepPurple],
+              ),
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          title: const Text('Art & Design',
               style: TextStyle(
                   fontWeight: FontWeight.w500, color: Colors.white)),
+          leading: Padding(
+            padding: EdgeInsets.only(
+              left: 21.w,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_sharp, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(
+                right: 21.w,
+              ),
+              child: IconButton(
+                icon: const Icon(IconBroken.Search, color: Colors.white),
+                onPressed: () {},
+              ),
+            ),
+          ],
         );
         var cubit = NasaCubit.get(context);
         if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond) {
@@ -30,13 +70,7 @@ class ART_screen extends StatelessWidget {
           );
         }
         return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            backgroundColor: Colors.deepPurple,
-            title: const Text('Art Committee',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.white)),
-          ),
+          appBar: appbar,
           body: Center(
             child: Text('Art'),
           ),

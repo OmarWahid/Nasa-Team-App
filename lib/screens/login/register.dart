@@ -9,11 +9,13 @@ import 'package:nasa_app/style/capital_letter.dart';
 
 import '../../all_cubit/login_cubit/cubit.dart';
 import '../../all_cubit/shop_cubit/cubit_shop.dart';
+import '../../style/iCONS.dart';
 
 var formKey = GlobalKey<FormState>();
 
 var phoneController = TextEditingController();
-var nameController = TextEditingController();
+var firstNameController = TextEditingController();
+var lastNameController = TextEditingController();
 var passwordController = TextEditingController();
 var emailController = TextEditingController();
 var confirmPasswordController = TextEditingController();
@@ -100,7 +102,8 @@ class _RegisterScreenState extends State<RegisterScreen>
           NasaCubit.get(context).getUserData();
 
           phoneController.clear();
-          nameController.clear();
+          firstNameController.clear();
+          lastNameController.clear();
           passwordController.clear();
           emailController.clear();
           confirmPasswordController.clear();
@@ -159,14 +162,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'REGISTER',
+                            'Register',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4!
                                 .copyWith(color: Colors.black),
                           ),
                           Text(
-                            'Register in Our Team Now 👾',
+                            'Sign up in our team now 👾',
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       color: Colors.grey,
@@ -176,28 +179,58 @@ class _RegisterScreenState extends State<RegisterScreen>
                             height: height * 0.035,
                           ),
                           //name form field
-                          TextFormField(
-                            controller: nameController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "please enter your name";
-                              }
-                              return null;
-                            },
-                            // style: TextStyle(color:Colors.white ),
-                            decoration: InputDecoration(
-                              label: Text("Name"),
-                              prefixIcon: Icon(
-                                Icons.person,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: firstNameController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "please enter your first name";
+                                    }
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                    label: Text("First name"),
+                                    prefixIcon: Icon(
+                                      IconBroken.Profile,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 12.h),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.r),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.name,
+                                ),
                               ),
-                              // labelStyle: TextStyle(color: Colors.white),
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 12.h),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.r),
+                              SizedBox(
+                                width: width * 0.035,
                               ),
-                            ),
-                            keyboardType: TextInputType.name,
+                              Expanded(
+                                child: TextFormField(
+                                  controller: lastNameController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "please enter your last name";
+                                    }
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                    label: Text("Last name"),
+                                    prefixIcon: Icon(
+                                      IconBroken.User,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 12.h),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.r),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.name,
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height: height * 0.026,
@@ -208,11 +241,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                               if (value!.isEmpty) {
                                 return "please enter your phone";
                               }
+                              if (value.length != 11) {
+                                return "please enter a valid phone number";
+                              }
                               return null;
                             },
                             decoration: InputDecoration(
                               label: Text("Phone"),
-                              prefixIcon: Icon(Icons.phone),
+                              prefixIcon: Icon(IconBroken.Call),
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
@@ -235,7 +271,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                             },
                             decoration: InputDecoration(
                               label: Text("Email Address"),
-                              prefixIcon: Icon(Icons.email_outlined),
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                color: Colors.grey[500],
+                              ),
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
@@ -252,13 +291,20 @@ class _RegisterScreenState extends State<RegisterScreen>
                             controller: passwordController,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "enter a valid password";
+                                return "please enter your password";
+                              }
+                              if (value.length < 8) {
+                                return "password must be at least 8 characters";
+                              }
+                              if (!value.contains(RegExp(r'[a-z]')) &&
+                                  !value.contains(RegExp(r'[A-Z]'))) {
+                                return "password must contain at least one letter";
                               }
                               return null;
                             },
                             decoration: InputDecoration(
                               label: const Text("Password"),
-                              prefixIcon: const Icon(Icons.lock_outline),
+                              prefixIcon: const Icon(IconBroken.Lock),
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
@@ -293,15 +339,29 @@ class _RegisterScreenState extends State<RegisterScreen>
                             },
                             onFieldSubmitted: (value) {
                               if (formKey.currentState!.validate()) {
+                                String firstName = '';
+                                String lastName = '';
+                                (firstNameController.text.endsWith(' '))
+                                    ? firstName = firstNameController.text
+                                        .substring(
+                                            0,
+                                            firstNameController.text
+                                                .lastIndexOf(' '))
+                                        .toTitleCase()
+                                    : firstName =
+                                        firstNameController.text.toTitleCase();
+
+                                (lastNameController.text.endsWith(' '))
+                                    ? lastName = lastNameController.text
+                                        .substring(
+                                            0,
+                                            lastNameController.text
+                                                .lastIndexOf(' '))
+                                        .toTitleCase()
+                                    : lastName =
+                                        lastNameController.text.toTitleCase();
                                 LoginCubit.get(context).registerUser(
-                                  name: (nameController.text.endsWith(' '))
-                                      ? nameController.text
-                                          .substring(
-                                              0,
-                                              nameController.text
-                                                  .lastIndexOf(' '))
-                                          .toTitleCase()
-                                      : nameController.text.toTitleCase(),
+                                  name: '$firstName $lastName',
                                   email: emailController.text,
                                   password: passwordController.text,
                                   phone: phoneController.text,
@@ -310,7 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             },
                             decoration: InputDecoration(
                               label: const Text("Confirm Password"),
-                              prefixIcon: const Icon(Icons.lock_outline),
+                              prefixIcon: const Icon(IconBroken.Lock),
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 12.h),
                               border: OutlineInputBorder(
@@ -345,28 +405,43 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   child: MaterialButton(
                                     onPressed: () {
                                       if (formKey.currentState!.validate()) {
+                                        String firstName = '';
+                                        String lastName = '';
+                                        (firstNameController.text.endsWith(' '))
+                                            ? firstName = firstNameController
+                                                .text
+                                                .substring(
+                                                    0,
+                                                    firstNameController.text
+                                                        .lastIndexOf(' '))
+                                                .toTitleCase()
+                                            : firstName = firstNameController
+                                                .text
+                                                .toTitleCase();
+
+                                        (lastNameController.text.endsWith(' '))
+                                            ? lastName = lastNameController.text
+                                                .substring(
+                                                    0,
+                                                    lastNameController.text
+                                                        .lastIndexOf(' '))
+                                                .toTitleCase()
+                                            : lastName = lastNameController.text
+                                                .toTitleCase();
                                         LoginCubit.get(context).registerUser(
-                                          name: (nameController.text
-                                                  .endsWith(' '))
-                                              ? nameController.text
-                                                  .substring(
-                                                      0,
-                                                      nameController.text
-                                                          .lastIndexOf(' '))
-                                                  .toTitleCase()
-                                              : nameController.text
-                                                  .toTitleCase(),
+                                          name: '$firstName $lastName',
                                           email: emailController.text,
                                           password: passwordController.text,
                                           phone: phoneController.text,
                                         );
                                       }
                                     },
-                                    child: const Text(
-                                      'REGISTER',
+                                    child: Text(
+                                      'LOGIN',
                                       style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15.sp,
+                                        letterSpacing: 1.w,
+                                        fontWeight: FontWeight.w600,
                                         color: Colors.white,
                                       ),
                                     ),

@@ -118,7 +118,7 @@ class UpdateScreen_ extends StatelessWidget {
                                   backgroundColor: Colors.white,
                                   backgroundImage: image == null
                                       ? NetworkImage(
-                                          nasa.image)
+                                      NasaCubit.get(context).userData!.image!)
                                       : FileImage(image) as ImageProvider,
                                 )),
                             CircleAvatar(

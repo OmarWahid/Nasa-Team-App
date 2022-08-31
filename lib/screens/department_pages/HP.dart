@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 
+import '../../style/iCONS.dart';
+
 class HEADS_screen extends StatelessWidget {
   const HEADS_screen({Key? key}) : super(key: key);
 
@@ -17,10 +19,47 @@ class HEADS_screen extends StatelessWidget {
       builder: (context, state) {
         var appbar = AppBar(
           centerTitle: true,
-          backgroundColor: Colors.deepPurple,
+          elevation: 0,
+          toolbarHeight: ScreenUtil().setHeight(48),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(45.r),
+                bottomRight: Radius.circular(45.r),
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.deepPurple, Colors.deepPurple],
+              ),
+            ),
+          ),
+          backgroundColor: Colors.transparent,
           title: const Text('High Board',
-              style:
-                  TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
+              style: TextStyle(
+                  fontWeight: FontWeight.w500, color: Colors.white)),
+          leading: Padding(
+            padding: EdgeInsets.only(
+              left: 21.w,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_sharp, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(
+                right: 21.w,
+              ),
+              child: IconButton(
+                icon: const Icon(IconBroken.Search, color: Colors.white),
+                onPressed: () {},
+              ),
+            ),
+          ],
         );
         var cubit = NasaCubit.get(context);
         if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond) {

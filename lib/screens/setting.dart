@@ -13,6 +13,7 @@ import '../all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/shared/component.dart';
 
 import '../style/iCONS.dart';
+import 'FadeAnimation.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -59,7 +60,8 @@ class _SettingScreenState extends State<SettingScreen> {
               child: Center(
                 child: Column(
                   children: [
-                    Stack(
+                    FadeAnimation(
+                      0.2,Stack(
                       alignment: Alignment.bottomRight,
                       children: [
                         CircleAvatar(
@@ -72,15 +74,17 @@ class _SettingScreenState extends State<SettingScreen> {
                               child: Image.network(
                                 NasaCubit.get(context).userData!.image!,
                                 fit: BoxFit.cover,
+                                height: 122.h,
+                                width: 136.w,
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
                                   return loadingProgress == null
                                       ? child
                                       : Center(
-                                          child: CupertinoActivityIndicator(
-                                          color: Colors.deepPurple,
-                                          radius: 13.r,
-                                        ));
+                                      child: CupertinoActivityIndicator(
+                                        color: Colors.deepPurple,
+                                        radius: 13.r,
+                                      ));
                                 },
                               ),
                             ),
@@ -96,7 +100,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const UpdateScreen_()));
+                                            const UpdateScreen_()));
                                     if (refresh == 'refresh') {
                                       NasaCubit.get(context).getUserData();
                                     }
@@ -109,8 +113,10 @@ class _SettingScreenState extends State<SettingScreen> {
                             )),
                       ],
                     ),
+                    ),
+
                     SizedBox(height: height * 0.025),
-                    Text(
+                FadeAnimation( 0.45 ,Text(
                       NasaCubit.get(context).userData!.name!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -118,19 +124,19 @@ class _SettingScreenState extends State<SettingScreen> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                    Text(NasaCubit.get(context).userData!.bio!,
+                    )),
+                FadeAnimation( 0.75 ,     Text(NasaCubit.get(context).userData!.bio!,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           height: 1.4.h,
                           fontSize: 13.sp,
                           color: Colors.grey,
-                        )),
+                        )),),
                     SizedBox(height: height * 0.034),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
+                        FadeAnimation( 1.05 ,   Container(
                           height: height * 0.078,
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -173,9 +179,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               ],
                             ),
                           ),
-                        ),
+                        )),
                         SizedBox(height: height * 0.026),
-                        Container(
+                        FadeAnimation( 1.35 ,   Container(
                           height: height * 0.078,
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -299,9 +305,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               ],
                             ),
                           ),
-                        ),
+                        )),
                         SizedBox(height: height * 0.026),
-                        Container(
+                        FadeAnimation( 1.65 ,     Container(
                           height: height * 0.078,
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -413,9 +419,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               ],
                             ),
                           ),
-                        ),
+                        )),
                         SizedBox(height: height * 0.026),
-                        Container(
+                        FadeAnimation( 2.05 ,   Container(
                           height: height * 0.078,
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -560,9 +566,9 @@ class _SettingScreenState extends State<SettingScreen> {
                               ],
                             ),
                           ),
-                        ),
+                        )),
                         SizedBox(height: height * 0.026),
-                        Container(
+                        FadeAnimation( 2.35 ,  Container(
                           height: height * 0.078,
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -669,7 +675,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               ],
                             ),
                           ),
-                        ),
+                        )),
                       ],
                     ),
                   ],

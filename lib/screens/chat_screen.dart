@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
+import 'package:nasa_app/model/chat_model.dart';
 
 import '../all_cubit/shop_cubit/cubit_shop.dart';
+import '../model/login_model.dart';
 import '../style/iCONS.dart';
 
 var messageChatController = TextEditingController();
@@ -13,7 +16,9 @@ String yourComment = '';
 var scrollController = ScrollController();
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  SocialModel user;
+
+  ChatScreen({required this.user, Key? key}) : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -24,10 +29,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<NasaCubit, NasaState>(
       listener: (context, state) {
-        // if (state is SuccessCommentPosts) {
-        //   messageChatController.clear();
-        //   yourComment = '';
-        // }
+        if (state is SuccessGroupSendMessage) {
+          messageChatController.clear();
+          yourComment = '';
+        }
       },
       builder: (context, state) {
         return WillPopScope(
@@ -37,6 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
             return true;
           },
           child: Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
               centerTitle: true,
               elevation: 0,
@@ -83,38 +89,51 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             body: Column(
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: 10.w,
-                      right: 10.w,
-                      top: 15.h,
-                    ),
-                    child: Column(
-                      children: [
-                        buildItemMessage(context),
-                        SizedBox(
-                          height: 1.h,
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('chat')
+                      .orderBy('time', descending: true)
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    List<ChatModel> chatList = [];
+                    if (snapshot.hasData) {
+                      for (var element in snapshot.data!.docs) {
+                        chatList.add(ChatModel.fromJson(
+                            element.data() as Map<String, dynamic>));
+                      }
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 10.w,
+                            right: 10.w,
+                          ),
+                          child: ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            reverse: true,
+                            controller: scrollController,
+                            itemBuilder: (context, index) {
+                              if (chatList[index].senderId == widget.user.uId) {
+                                return buildItemMyMessage(
+                                    context, chatList[index], index);
+                              }
+                              return buildItemMessage(
+                                  context, chatList[index], index);
+                            },
+                            separatorBuilder: (context, index) => SizedBox(
+                              height: 5.h,
+                            ),
+                            itemCount: snapshot.data!.docs.length,
+                          ),
                         ),
-                        buildItemMyMessage(context),
-                        buildItemMessage(context),
-                        SizedBox(
-                          height: 1.h,
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.deepPurple,
                         ),
-                        buildItemMyMessage(context),
-                        buildItemMessage(context),
-                        SizedBox(
-                          height: 1.h,
-                        ),
-                        buildItemMyMessage(context),
-                        buildItemMessage(context),
-                        SizedBox(
-                          height: 1.h,
-                        ),
-                        buildItemMyMessage(context),
-                      ],
-                    ),
-                  ),
+                      );
+                    }
+                  },
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -151,10 +170,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                       duration:
                                           const Duration(milliseconds: 300),
                                       curve: Curves.easeOut);
-                                  // NasaCubit.get(context).commentPost(
-                                  //     text: yourComment,
-                                  //     postId:
-                                  //     NasaCubit.get(context).postIdTest);
+                                  NasaCubit.get(context).groupSendMessage(
+                                    text: yourComment,
+                                  );
                                 }
                               },
                               onChanged: (value) {
@@ -170,8 +188,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                         ),
-                        // NasaCubit.get(context).isComment
-                        false
+                        NasaCubit.get(context).isMessage
                             ? Padding(
                                 padding: EdgeInsets.only(
                                   right: 10.w,
@@ -201,10 +218,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                           duration:
                                               const Duration(milliseconds: 300),
                                           curve: Curves.easeOut);
-                                      // NasaCubit.get(context).commentPost(
-                                      //     text: yourComment,
-                                      //     postId: NasaCubit.get(context)
-                                      //         .postIdTest);
+                                      NasaCubit.get(context).groupSendMessage(
+                                        text: yourComment,
+                                      );
                                     }
                                   },
                                   child: Icon(
@@ -226,142 +242,168 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget buildItemMessage(context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            top: 5.h,
-          ),
-          child: CircleAvatar(
-            radius: 23.r,
-            backgroundColor: Colors.white,
-            child: ClipOval(
-              child: Image.network(
-                'https://img.freepik.com/free-photo/relaxed-friendly-good-looking-european-guy-with-bristle-smiling-joyfully-with-white-healthy-teeth-holding-hands-pockets-being-happy-satisfied-posing-cheerfully-white-wall_176420-35904.jpg?w=996&t=st=1661890245~exp=1661890845~hmac=5e3df75d32292fc357c1d38b29ef1ff025eb1f917daed1392afe6f320128529a',
-                fit: BoxFit.cover,
-                height: 48.h,
-                width: 48.w,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const Center(
-                    child: CupertinoActivityIndicator(
-                      color: Colors.deepPurple,
-                    ),
-                  );
-                },
+  Widget buildItemMessage(context, ChatModel model, index) {
+    String givenStr = model.time!;
+    String finalStr = givenStr.substring(0, 4) + givenStr.substring(7);
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: index == 0 ? 9.h : 0.h,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 5.h,
+            ),
+            child: CircleAvatar(
+              radius: 25.r,
+              backgroundColor: Colors.white,
+              child: ClipOval(
+                child: Image.network(
+                  model.image!,
+                  fit: BoxFit.cover,
+                  height: 50.h,
+                  width: 50.w,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CupertinoActivityIndicator(
+                        color: Colors.deepPurple,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(
-          width: 10.w,
-        ),
-        Expanded(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text('Omar Wahid',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        )),
-                    // SizedBox(
-                    //   width: 3.w,
-                    // ),
-                    // Icon(
-                    //   Icons.check_circle,
-                    //   color: Colors.blue,
-                    //   size: 16.w,
-                    // ),
-                    SizedBox(
-                      width: 5.w,
-                    ),
-                    Text(
-                      DateFormat('h:mm a').format(DateTime.now()).toString(),
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontSize: 9.5.sp,
-                          ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 13.w,
-                    vertical: 8.h,
+          SizedBox(
+            width: 8.w,
+          ),
+          Expanded(
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: (model.name! == 'Omar Wahid')
+                        ? CrossAxisAlignment.center
+                        : CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(model.name!,
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          )),
+                      if (model.name! == 'Omar Wahid')
+                        SizedBox(
+                          width: 3.w,
+                        ),
+                      if (model.name! == 'Omar Wahid')
+                        Icon(
+                          Icons.check_circle,
+                          color: Colors.blue,
+                          size: 16.7.w,
+                        ),
+                      SizedBox(
+                        width: 5.w,
+                      ),
+                      Text(
+                        finalStr,
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              fontSize: 9.5.sp,
+                            ),
+                      ),
+                    ],
                   ),
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadiusDirectional.only(
-                        topEnd: Radius.circular(15.r),
-                        bottomStart: Radius.circular(25.r),
-                        bottomEnd: Radius.circular(15.r),
-                      )),
-                  // child: Text('${message.text}'),
-                  child: Text('Hallo Man !!', style: TextStyle(height: 1.1.h)),
-                ),
-              ],
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 9.h,
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadiusDirectional.only(
+                          topEnd: Radius.circular(15.r),
+                          bottomStart: Radius.circular(25.r),
+                          bottomEnd: Radius.circular(15.r),
+                        )),
+                    // child: Text('${message.text}'),
+                    child: Text(model.text!,
+                        // textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
+                        //     ? TextDirection.rtl
+                        //     : TextDirection.ltr,
+                        style: TextStyle(height: 1.1.h)),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget buildItemMyMessage(context) {
-    return Align(
-      alignment: AlignmentDirectional.centerEnd,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                DateFormat('h:mm a').format(DateTime.now()).toString(),
-                style: Theme.of(context)
-                    .textTheme
-                    .caption!
-                    .copyWith(fontSize: 9.5.sp),
-              ),
-              SizedBox(
-                width: 5.w,
-              ),
-              Text('You',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  )),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 13.w,
-              vertical: 8.h,
+  Widget buildItemMyMessage(context, ChatModel model, index) {
+    String givenStr = model.time!;
+    String finalStr = givenStr.substring(0, 4) + givenStr.substring(7);
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: index == 0 ? 9.h : 0.h,
+      ),
+      child: Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  finalStr,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption!
+                      .copyWith(fontSize: 9.5.sp),
+                ),
+                SizedBox(
+                  width: 5.w,
+                ),
+                Text('You',
+                    style: TextStyle(
+                      fontSize: 12.5.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    )),
+              ],
             ),
-            decoration: BoxDecoration(
-                color: Colors.deepPurple.withOpacity(0.5),
-                borderRadius: BorderRadiusDirectional.only(
-                  topStart: Radius.circular(15.r),
-                  bottomStart: Radius.circular(15.r),
-                  bottomEnd: Radius.circular(25.r),
-                )),
-            // child: Text('${message.text}'),
-            child: Text('im not Man !!', style: TextStyle(height: 1.1.h)),
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 14.w,
+                vertical: 9.h,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.deepPurple.withOpacity(0.4),
+                  borderRadius: BorderRadiusDirectional.only(
+                    topStart: Radius.circular(15.r),
+                    bottomStart: Radius.circular(15.r),
+                    bottomEnd: Radius.circular(25.r),
+                  )),
+              // child: Text('${message.text}'),
+              child: Text(model.text!,
+                  // textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
+                  //     ? TextDirection.rtl
+                  //     : TextDirection.ltr,
+                  style: TextStyle(height: 1.1.h)),
+            ),
+          ],
+        ),
       ),
     );
   }

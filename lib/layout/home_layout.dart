@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
+import 'package:shimmer/shimmer.dart';
+import '../screens/FadeAnimation.dart';
 import '../screens/chat_screen.dart';
 import '../shared/component.dart';
 import '../style/iCONS.dart';
@@ -61,26 +63,40 @@ class NasaLayout extends StatelessWidget {
             cubit.isDoneSecond ||
             cubit.isDonePosts) {
           return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
             appBar: appBar,
+            body: Padding(
+              padding: EdgeInsets.only(
+                top: 6.h,
+                bottom: 6.h,
+                right: 6.w,
+                left: 6.w,
+              ),
+              child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => getItemShimmer(),
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 0.h,
+                ),
+                itemCount: 7,
+              ),
+            ),
           );
         }
         return Scaffold(
           extendBody: true,
           floatingActionButton: FloatingActionButton(
-
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ChatScreen();
+                return ChatScreen(
+                  user: cubit.userData!,
+                );
               }));
             },
-            child:  Icon(IconBroken.Chat,
-            size: 29.w,
+            child: Icon(
+              IconBroken.Chat,
+              size: 29.w,
             ),
             backgroundColor: Colors.deepPurple,
-
           ),
           extendBodyBehindAppBar:
               (cubit.status == ConnectivityResult.none) ? false : true,
@@ -160,6 +176,24 @@ class NasaLayout extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Shimmer getItemShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        child: Container(
+          height: 117.h,
+          width: 116.w,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }

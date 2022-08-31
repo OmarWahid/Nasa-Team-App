@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
+import 'package:nasa_app/model/chat_model.dart';
 import 'package:nasa_app/model/login_model.dart';
 import 'package:nasa_app/model/member_model.dart';
 import 'package:nasa_app/model/posts_model.dart';
@@ -24,13 +25,11 @@ class NasaCubit extends Cubit<NasaState> {
 
   static NasaCubit get(context) => BlocProvider.of(context);
 
-  bool isLoading = false;
   bool isDoneSecond = true;
 
   Future<void> getSomeSecond() async {
     emit(LoadingSecond());
     await Future.delayed(Duration(milliseconds: 1100));
-    isLoading = true;
     isDoneSecond = false;
     emit(SuccessSecond());
   }
@@ -360,5 +359,36 @@ class NasaCubit extends Cubit<NasaState> {
       isComment = false;
       emit(ErrorCommentPosts());
     });
+  }
+
+  bool isMessage = false;
+
+  ChatModel? chatModel;
+  void groupSendMessage ({
+  required String text,
+}) {
+    isMessage = true;
+    emit(LoadingGroupSendMessage());
+    chatModel = ChatModel(
+      senderId: userData!.uId,
+      text: text,
+      time:DateFormat('h:mm:ss a').format(DateTime.now()).toString(),
+
+    image: userData!.image,
+      name: userData!.name,
+    );
+    FirebaseFirestore.instance
+        .collection('chat')
+        .add(
+      chatModel!.toJson(),
+        )
+        .then((value) {
+      isMessage = false;
+          emit(SuccessGroupSendMessage());
+        }).onError((error, stackTrace) {
+          print(error);
+          isMessage = false;
+          emit(ErrorGroupSendMessage());
+        });
   }
 }

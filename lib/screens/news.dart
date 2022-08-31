@@ -7,6 +7,7 @@ import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import '../model/posts_model.dart';
 import '../style/iCONS.dart';
+import 'FadeAnimation.dart';
 import 'comment_screen.dart';
 
 class NewsScreen extends StatelessWidget {
@@ -73,6 +74,9 @@ class NewsScreen extends StatelessWidget {
                   child: ClipOval(
                     child: Image.network(
                       model.image!,
+                      fit: BoxFit.cover,
+                      width: 44.w,
+                      height: 39.h,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
                         return Center(
@@ -291,10 +295,10 @@ class NewsScreen extends StatelessWidget {
                           NasaCubit.get(context).postsId[index]);
                       Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => CommentsScreen(
-                                    indexComments: index,
-                                  )));
+                          BouncyPage(widget:CommentsScreen(
+                            indexComments: index,
+                          ), curve: Curves.easeInOutBack)
+                     );
                     },
                     child: Row(
                       children: [
@@ -304,6 +308,9 @@ class NewsScreen extends StatelessWidget {
                           child: ClipOval(
                             child: Image.network(
                               NasaCubit.get(context).userData!.image!,
+                              fit: BoxFit.cover,
+                              height: 30.h,
+                              width: 32.w,
                               loadingBuilder:
                                   (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;

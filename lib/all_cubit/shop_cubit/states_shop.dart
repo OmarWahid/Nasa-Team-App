@@ -70,3 +70,7 @@ class SuccessCommentPosts extends NasaState {}
 class ErrorCommentPosts extends NasaState {}
 
 class GetIdPostsTest extends NasaState {}
+
+class SuccessGroupSendMessage extends NasaState {}
+class ErrorGroupSendMessage extends NasaState {}
+class LoadingGroupSendMessage extends NasaState {}
