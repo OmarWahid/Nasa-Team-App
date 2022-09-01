@@ -25,6 +25,10 @@ class SuccessUploadProfileUrl extends NasaState {}
 class LoadingUploadProfileUrl extends NasaState {}
 class ErrorUploadProfileUrl extends NasaState {}
 
+class SuccessCompressPhoto extends NasaState {}
+class LoadingCompressPhoto extends NasaState {}
+class ErrorCompressPhoto extends NasaState {}
+
 
 
 class SuccessLogoutData extends NasaState {}

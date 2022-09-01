@@ -1,4 +1,5 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -71,16 +72,13 @@ class _SettingScreenState extends State<SettingScreen> {
                             radius: 68.r,
                             backgroundColor: Colors.white,
                             child: ClipOval(
-                              child: Image.network(
-                                NasaCubit.get(context).userData!.image!,
+                              child: CachedNetworkImage(
+                                imageUrl:  NasaCubit.get(context).userData!.image!,
                                 fit: BoxFit.cover,
                                 height: 122.h,
                                 width: 136.w,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  return loadingProgress == null
-                                      ? child
-                                      : Center(
+                                placeholder: (context, url) {
+                                    return   Center(
                                       child: CupertinoActivityIndicator(
                                         color: Colors.deepPurple,
                                         radius: 13.r,

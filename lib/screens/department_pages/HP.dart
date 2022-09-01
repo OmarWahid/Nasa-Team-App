@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,15 +126,15 @@ class HEADS_screen extends StatelessWidget {
               width: 116.w,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(18.r),
-                  child: Image.network(data['image'], fit: BoxFit.cover,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
+                  child: CachedNetworkImage(
+                      imageUrl:  data['image'],
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) {
                     return Center(child: CupertinoActivityIndicator(
                       color: Colors.white,
                       radius: 12.r,
                     ));
-                  }, errorBuilder: (context, error, stackTrace) {
+                  }, errorWidget: (context, url, error){
                     return Image.asset(
                       'assets/images/Making art-cuate.png',
                       fit: BoxFit.cover,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import '../model/posts_model.dart';
+import '../shared/component.dart';
 import '../style/iCONS.dart';
 import 'FadeAnimation.dart';
 import 'comment_screen.dart';
@@ -68,23 +70,27 @@ class NewsScreen extends StatelessWidget {
             Row(
               children: [
                 //profile photo
-                CircleAvatar(
-                  radius: 22.r,
-                  backgroundColor: Colors.white,
-                  child: ClipOval(
-                    child: Image.network(
-                      model.image!,
-                      fit: BoxFit.cover,
-                      width: 44.w,
-                      height: 39.h,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CupertinoActivityIndicator(
-                            color: Colors.deepPurple,
-                          ),
-                        );
-                      },
+                InkWell(
+                  onTap: () {
+                    DisplayPlayPhoto(url: model.image!, context: context);
+                  },
+                  child: CircleAvatar(
+                    radius: 22.r,
+                    backgroundColor: Colors.white,
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: model.image!,
+                        fit: BoxFit.cover,
+                        width: 44.w,
+                        height: 39.h,
+                        placeholder: (context, url) {
+                          return Center(
+                            child: CupertinoActivityIndicator(
+                              color: Colors.deepPurple,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -160,11 +166,10 @@ class NewsScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.r),
-                      child: Image.network(
-                        model.imagePost!,
+                      child: CachedNetworkImage(
+                        imageUrl: model.imagePost!,
                         fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
+                        placeholder: (context, url) {
                           return Center(
                             child: CupertinoActivityIndicator(
                               color: Colors.deepPurple,
@@ -266,10 +271,11 @@ class NewsScreen extends StatelessWidget {
                             NasaCubit.get(context).postsId[index]);
                         Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => CommentsScreen(
-                                      indexComments: index,
-                                    )));
+                            BouncyPage(
+                                widget: CommentsScreen(
+                                  indexComments: index,
+                                ),
+                                curve: Curves.easeOutBack));
                       },
                     ),
                   ),
@@ -295,10 +301,11 @@ class NewsScreen extends StatelessWidget {
                           NasaCubit.get(context).postsId[index]);
                       Navigator.push(
                           context,
-                          BouncyPage(widget:CommentsScreen(
-                            indexComments: index,
-                          ), curve: Curves.easeInOutBack)
-                     );
+                          BouncyPage(
+                              widget: CommentsScreen(
+                                indexComments: index,
+                              ),
+                              curve: Curves.easeOutBack));
                     },
                     child: Row(
                       children: [
@@ -306,14 +313,12 @@ class NewsScreen extends StatelessWidget {
                           radius: 16.r,
                           backgroundColor: Colors.white,
                           child: ClipOval(
-                            child: Image.network(
-                              NasaCubit.get(context).userData!.image!,
+                            child: CachedNetworkImage(
+                              imageUrl: NasaCubit.get(context).userData!.image!,
                               fit: BoxFit.cover,
                               height: 30.h,
                               width: 32.w,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
+                              placeholder: (context, url) {
                                 return Center(
                                   child: CupertinoActivityIndicator(
                                     color: Colors.deepPurple,

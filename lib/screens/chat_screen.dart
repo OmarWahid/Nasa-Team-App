@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import 'package:nasa_app/model/chat_model.dart';
+import 'package:nasa_app/shared/component.dart';
 
 import '../all_cubit/shop_cubit/cubit_shop.dart';
 import '../model/login_model.dart';
@@ -95,8 +97,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       .orderBy('time', descending: true)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    print('7777777777777777777 is Working 7777777777777777777777');
+
                     List<ChatModel> chatList = [];
                     if (snapshot.hasData) {
+                      print('8888888888888888 is Working 8888888888888888888');
+
                       for (var element in snapshot.data!.docs) {
                         chatList.add(ChatModel.fromJson(
                             element.data() as Map<String, dynamic>));
@@ -256,23 +262,27 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.only(
               top: 5.h,
             ),
-            child: CircleAvatar(
-              radius: 25.r,
-              backgroundColor: Colors.white,
-              child: ClipOval(
-                child: Image.network(
-                  model.image!,
-                  fit: BoxFit.cover,
-                  height: 50.h,
-                  width: 50.w,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(
-                      child: CupertinoActivityIndicator(
-                        color: Colors.deepPurple,
-                      ),
-                    );
-                  },
+            child: InkWell(
+              onTap: (){
+                DisplayPlayPhoto(url: model.image!,context: context);
+              },
+              child: CircleAvatar(
+                radius: 25.r,
+                backgroundColor: Colors.white,
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: model.image!,
+                    fit: BoxFit.cover,
+                    height: 50.h,
+                    width: 50.w,
+                    placeholder: (context, url) {
+                      return const Center(
+                        child: CupertinoActivityIndicator(
+                          color: Colors.deepPurple,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

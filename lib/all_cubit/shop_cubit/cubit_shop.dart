@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
@@ -147,11 +148,10 @@ class NasaCubit extends Cubit<NasaState> {
     }).catchError((error) {
       emit(ErrorLogoutData());
     });
-
-
   }
 
   File? profileImage;
+  File? compressedImage;
   final picker = ImagePicker();
 
   Future<void> getProfileData() async {
@@ -159,29 +159,50 @@ class NasaCubit extends Cubit<NasaState> {
 
     if (pickedFile != null) {
       profileImage = File(pickedFile.path);
+      compressedImage = await compressAndGetFile(
+        file: profileImage!,
+        quality: 94,
+      );
 
+      await uploadProfile();
       emit(ProfilePikerSuccessState());
-      uploadProfile();
     } else {
       print('no Image ????');
       emit(ProfilePikerErrorState());
     }
   }
 
+  Future<File> compressAndGetFile(
+      {required File file, required int quality}) async {
+    emit(LoadingCompressPhoto());
+    final filePath = file.absolute.path;
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      outPath,
+      quality: quality,
+    );
+
+    print(
+        '@@@@@@@@@@@@@@@@@@@@@@@@@@ ${file.lengthSync()} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    print(result!.lengthSync());
+    return result;
+  }
+
   String imageProfileUrl = '';
 
-  void uploadProfile() {
-    emit(LoadingUploadProfileUrl());
+  Future<void> uploadProfile() async {
 
-    storage.FirebaseStorage.instance
+    await storage.FirebaseStorage.instance
         .ref()
         .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
-        .putFile(profileImage!)
+        .putFile(compressedImage!)
         .then((p0) {
       p0.ref.getDownloadURL().then((value) {
         imageProfileUrl = value;
         print(imageProfileUrl);
-        emit(SuccessUploadProfileUrl());
       }).onError((error, stackTrace) {
         print(error);
         emit(ErrorUploadProfileUrl());
@@ -364,31 +385,31 @@ class NasaCubit extends Cubit<NasaState> {
   bool isMessage = false;
 
   ChatModel? chatModel;
-  void groupSendMessage ({
-  required String text,
-}) {
+
+  void groupSendMessage({
+    required String text,
+  }) {
     isMessage = true;
     emit(LoadingGroupSendMessage());
     chatModel = ChatModel(
       senderId: userData!.uId,
       text: text,
-      time:DateFormat('h:mm:ss a').format(DateTime.now()).toString(),
-
-    image: userData!.image,
+      time: DateFormat('h:mm:ss a').format(DateTime.now()).toString(),
+      image: userData!.image,
       name: userData!.name,
     );
     FirebaseFirestore.instance
         .collection('chat')
         .add(
-      chatModel!.toJson(),
+          chatModel!.toJson(),
         )
         .then((value) {
       isMessage = false;
-          emit(SuccessGroupSendMessage());
-        }).onError((error, stackTrace) {
-          print(error);
-          isMessage = false;
-          emit(ErrorGroupSendMessage());
-        });
+      emit(SuccessGroupSendMessage());
+    }).onError((error, stackTrace) {
+      print(error);
+      isMessage = false;
+      emit(ErrorGroupSendMessage());
+    });
   }
 }

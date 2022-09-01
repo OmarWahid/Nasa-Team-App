@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../model/posts_model.dart';
+import '../shared/component.dart';
 import '../style/iCONS.dart';
 
 var scrollController = ScrollController();
@@ -132,9 +134,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           .snapshots(),
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        print('7777777777777777777 is Working 7777777777777777777777');
                         List<CommentModel> comments = [];
 
                         if (snapshot.hasData) {
+                          print('8888888888888888888888 is Working 8888888888888888');
+
                           for (var element in snapshot.data!.docs) {
                             comments.add(CommentModel.fromJson(
                                 element.data() as Map<String, dynamic>));
@@ -303,27 +308,32 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 padding: EdgeInsets.only(
                   top: 3.h,
                 ),
-                child: CircleAvatar(
-                  radius: 25.w,
-                  backgroundColor: Colors.grey.shade100,
-                  child: ClipOval(
-                    child: Image.network(
-                      data.image,
-                      height: 44.h,
-                      width: 50.w,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return SizedBox(
-                          height: 44.h,
-                          width: 50.w,
-                          child: const Center(
-                            child: CupertinoActivityIndicator(
-                              color: Colors.deepPurple,
+                child: InkWell(
+                  onTap: (){
+                    DisplayPlayPhoto(url: data.image,context: context);
+
+                  },
+                  child: CircleAvatar(
+                    radius: 25.w,
+                    backgroundColor: Colors.grey.shade100,
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl:  data.image,
+                        height: 44.h,
+                        width: 50.w,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) {
+                          return SizedBox(
+                            height: 44.h,
+                            width: 50.w,
+                            child: const Center(
+                              child: CupertinoActivityIndicator(
+                                color: Colors.deepPurple,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

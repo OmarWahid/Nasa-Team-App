@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 
@@ -24,17 +26,6 @@ class UpdateScreen_ extends StatelessWidget {
         if (state is SuccessUpdateTextData) {
           Fluttertoast.showToast(
             msg: 'Update Successfully ✔',
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-        }
-        if (state is LoadingUploadProfileUrl) {
-          Fluttertoast.showToast(
-            msg: 'Loading image ...',
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
@@ -74,14 +65,57 @@ class UpdateScreen_ extends StatelessWidget {
           ),
         );
 
-        if (
-            state is LoadingGetUserData||
-            state is LoadingUploadProfileUrl
-            ) {
+        if (state is LoadingCompressPhoto) {
+          return Scaffold(
+            appBar: appBar,
+            body: Padding(
+              padding: EdgeInsets.only(bottom: 20.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('image compression and uploading',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 22.sp,
+                          height: 1.h,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.deepPurple)),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  CircleAvatar(
+                    radius: 80.r,
+                    child: LiquidCircularProgressIndicator(
+                      value: 0.43,
+                      // Defaults to 0.5.
+                      valueColor: AlwaysStoppedAnimation(Colors.purpleAccent),
+                      // Defaults to the current Theme's accentColor.
+                      backgroundColor: Colors.white,
+                      // Defaults to the current Theme's backgroundColor.
+                      borderColor: Colors.deepPurple[300],
+                      borderWidth: 4.w,
+                      direction: Axis.vertical,
+                      // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+                      center: Text("Loading...",
+                          style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        if (state is LoadingGetUserData) {
           return Scaffold(
             appBar: appBar,
             body: Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.deepPurple,
+              ),
             ),
           );
         }
@@ -117,8 +151,10 @@ class UpdateScreen_ extends StatelessWidget {
                                   radius: 68.r,
                                   backgroundColor: Colors.white,
                                   backgroundImage: image == null
-                                      ? NetworkImage(
-                                      NasaCubit.get(context).userData!.image!)
+                                      ? CachedNetworkImageProvider(
+                                          NasaCubit.get(context)
+                                              .userData!
+                                              .image!)
                                       : FileImage(image) as ImageProvider,
                                 )),
                             CircleAvatar(
@@ -132,7 +168,8 @@ class UpdateScreen_ extends StatelessWidget {
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.TOP,
                                           timeInSecForIosWeb: 5,
-                                          backgroundColor: Colors.deepPurpleAccent,
+                                          backgroundColor:
+                                              Colors.deepPurpleAccent,
                                           textColor: Colors.white,
                                           fontSize: 16.0,
                                         );
@@ -227,7 +264,7 @@ class UpdateScreen_ extends StatelessWidget {
                                 bio: controllerBio.text,
                                 phone: controllerPhone.text);
                           },
-                          child:  Text(
+                          child: Text(
                             'UPDATE',
                             style: TextStyle(
                               fontSize: 14.sp,
