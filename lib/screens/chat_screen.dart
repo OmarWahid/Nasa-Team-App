@@ -4,23 +4,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import 'package:nasa_app/model/chat_model.dart';
+import 'package:nasa_app/screens/search_screen.dart';
 import 'package:nasa_app/shared/component.dart';
-
 import '../all_cubit/shop_cubit/cubit_shop.dart';
 import '../model/login_model.dart';
 import '../style/iCONS.dart';
 
+List<ChatModel> chatList = [];
 var messageChatController = TextEditingController();
 String yourComment = '';
 var scrollController = ScrollController();
 
 class ChatScreen extends StatefulWidget {
-  SocialModel user;
+  final SocialModel user;
 
-  ChatScreen({required this.user, Key? key}) : super(key: key);
+ const ChatScreen({required this.user, Key? key}) : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -84,7 +84,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   child: IconButton(
                     icon: const Icon(IconBroken.Search, color: Colors.white),
-                    onPressed: () {},
+                    onPressed: () {
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(
+                     chatListSearch: chatList,
+                   )));
+                    },
                   ),
                 ),
               ],
@@ -99,7 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     print('7777777777777777777 is Working 7777777777777777777777');
 
-                    List<ChatModel> chatList = [];
+                    chatList = [];
                     if (snapshot.hasData) {
                       print('8888888888888888 is Working 8888888888888888888');
 
@@ -133,9 +137,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       );
                     } else {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.deepPurple,
+                      return Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.deepPurple,
+                          ),
                         ),
                       );
                     }
@@ -250,7 +256,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget buildItemMessage(context, ChatModel model, index) {
     String givenStr = model.time!;
-    String finalStr = givenStr.substring(0, 4) + givenStr.substring(7);
+    String finalStr = givenStr.substring(14, 18) + givenStr.substring(21);
     return Padding(
       padding: EdgeInsets.only(
         bottom: index == 0 ? 9.h : 0.h,
@@ -344,9 +350,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         )),
                     // child: Text('${message.text}'),
                     child: Text(model.text!,
-                        // textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
-                        //     ? TextDirection.rtl
-                        //     : TextDirection.ltr,
+                        textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
+                            ? TextDirection.rtl
+                            : TextDirection.ltr,
                         style: TextStyle(height: 1.1.h)),
                   ),
                 ],
@@ -360,7 +366,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget buildItemMyMessage(context, ChatModel model, index) {
     String givenStr = model.time!;
-    String finalStr = givenStr.substring(0, 4) + givenStr.substring(7);
+    String finalStr = givenStr.substring(14, 18) + givenStr.substring(21);
     return Padding(
       padding: EdgeInsets.only(
         bottom: index == 0 ? 9.h : 0.h,
@@ -390,6 +396,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       fontSize: 12.5.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
+
                     )),
               ],
             ),
@@ -407,9 +414,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   )),
               // child: Text('${message.text}'),
               child: Text(model.text!,
-                  // textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
-                  //     ? TextDirection.rtl
-                  //     : TextDirection.ltr,
+                  textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
+                      ? TextDirection.rtl
+                      : TextDirection.ltr,
                   style: TextStyle(height: 1.1.h)),
             ),
           ],

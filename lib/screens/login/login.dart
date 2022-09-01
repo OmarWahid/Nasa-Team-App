@@ -219,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen>with SingleTickerProviderState
                                       },
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: "Username",
+                                          hintText: "Email",
                                           prefixIcon:
                                               Icon(Icons.email_outlined),
                                           hintStyle:

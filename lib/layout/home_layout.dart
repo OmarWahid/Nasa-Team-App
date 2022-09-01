@@ -86,11 +86,13 @@ class NasaLayout extends StatelessWidget {
           extendBody: true,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ChatScreen(
-                  user: cubit.userData!,
-                );
-              }));
+              Navigator.push(
+                  context,
+                  BouncyPage(
+                      widget: ChatScreen(
+                        user: cubit.userData!,
+                      ),
+                      curve: Curves.easeOutBack));
             },
             child: Icon(
               IconBroken.Chat,

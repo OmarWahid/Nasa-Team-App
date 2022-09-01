@@ -164,19 +164,24 @@ class NewsScreen extends StatelessWidget {
                 child: Container(
                   height: 180.h,
                   width: double.infinity,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: CachedNetworkImage(
-                        imageUrl: model.imagePost!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) {
-                          return Center(
-                            child: CupertinoActivityIndicator(
-                              color: Colors.deepPurple,
-                            ),
-                          );
-                        },
-                      )),
+                  child: InkWell(
+                    onTap: (){
+                      DisplayPlayPhoto(url: model.imagePost!, context: context);
+                    },
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: CachedNetworkImage(
+                          imageUrl: model.imagePost!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) {
+                            return Center(
+                              child: CupertinoActivityIndicator(
+                                color: Colors.deepPurple,
+                              ),
+                            );
+                          },
+                        )),
+                  ),
                 ),
               ),
             //likes and comments

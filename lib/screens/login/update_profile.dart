@@ -69,42 +69,46 @@ class UpdateScreen_ extends StatelessWidget {
           return Scaffold(
             appBar: appBar,
             body: Padding(
-              padding: EdgeInsets.only(bottom: 20.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('image compression and uploading',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 22.sp,
-                          height: 1.h,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.deepPurple)),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  CircleAvatar(
-                    radius: 80.r,
-                    child: LiquidCircularProgressIndicator(
-                      value: 0.43,
-                      // Defaults to 0.5.
-                      valueColor: AlwaysStoppedAnimation(Colors.purpleAccent),
-                      // Defaults to the current Theme's accentColor.
-                      backgroundColor: Colors.white,
-                      // Defaults to the current Theme's backgroundColor.
-                      borderColor: Colors.deepPurple[300],
-                      borderWidth: 4.w,
-                      direction: Axis.vertical,
-                      // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
-                      center: Text("Loading...",
-                          style: TextStyle(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87)),
+              padding: EdgeInsets.only(bottom: 20.h,
+                  left: 22.w, right: 22.w
+              ),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('image compression and uploading',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 22.sp,
+                            height: 1.h,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.deepPurple)),
+                    SizedBox(
+                      height: 20.h,
                     ),
-                  ),
-                ],
+                    CircleAvatar(
+                      radius: 80.r,
+                      child: LiquidCircularProgressIndicator(
+                        value: 0.43,
+                        // Defaults to 0.5.
+                        valueColor: AlwaysStoppedAnimation(Colors.purpleAccent),
+                        // Defaults to the current Theme's accentColor.
+                        backgroundColor: Colors.white,
+                        // Defaults to the current Theme's backgroundColor.
+                        borderColor: Colors.deepPurple[300],
+                        borderWidth: 4.w,
+                        direction: Axis.vertical,
+                        // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+                        center: Text("Loading...",
+                            style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

@@ -394,7 +394,8 @@ class NasaCubit extends Cubit<NasaState> {
     chatModel = ChatModel(
       senderId: userData!.uId,
       text: text,
-      time: DateFormat('h:mm:ss a').format(DateTime.now()).toString(),
+      time:DateFormat('yyyyy.MMMMM.dd GGG h:mm:ss aaa').format(DateTime.now()),
+      // DateFormat('h:mm:ss a').format(DateTime.now()).toString(),
       image: userData!.image,
       name: userData!.name,
     );
