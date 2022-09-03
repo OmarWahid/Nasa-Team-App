@@ -110,15 +110,15 @@ class DepartScreen extends StatelessWidget {
                     (index == 0)
                         ? 0.2
                         : (index == 1)
-                            ? 0.6
+                            ? 0.7
                             : (index == 2)
-                                ? 1
+                                ? 1.5
                                 : (index == 3)
-                                    ? 1.4
+                                    ? 2
                                     : (index == 4)
-                                        ? 1.8
+                                        ? 2.5
                                         : (index == 5)
-                                            ? 2.2
+                                            ? 3
                                             : (index == 6)
                                                 ? 0.3
                                                 : 0.3,

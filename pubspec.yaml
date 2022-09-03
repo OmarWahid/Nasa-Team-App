@@ -58,6 +58,7 @@ dependencies:
   focused_menu: ^1.0.5
   achievement_view: ^1.0.0
   hidable: ^1.0.2
+  like_button: ^2.0.4
 
 
 

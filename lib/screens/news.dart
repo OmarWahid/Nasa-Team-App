@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:like_button/like_button.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import '../model/posts_model.dart';
@@ -373,13 +374,38 @@ class NewsScreen extends StatelessWidget {
                         return InkWell(
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.favorite,
-                                size: 16.w,
-                                color: (isLikeMany) ? Colors.red : Colors.grey,
+                              // Icon(
+                              //   Icons.favorite,
+                              //   size: 16.w,
+                              //   color: (isLikeMany) ? Colors.red : Colors.grey,
+                              // ),
+                              LikeButton(
+                                onTap: (isLiked) async {
+                                  if (isLiked) {
+                                    NasaCubit.get(context).likePost(
+                                        NasaCubit.get(context).postsId[index]);
+                                    return !isLiked;
+                                  } else {
+                                    NasaCubit.get(context).likePost(
+                                        NasaCubit.get(context).postsId[index]);
+                                    return !isLiked;
+                                  }
+                                },
+                                isLiked: isLikeMany,
+                                animationDuration: Duration(milliseconds: 1100),
+                                likeBuilder: (bool isLiked) {
+                                  return Icon(
+                                    Icons.favorite,
+                                    size: 19.5.w,
+                                    color:
+                                        (isLikeMany) ? Colors.red : Colors.grey,
+                                  );
+                                },
+
+                                size: 19.5.w,
                               ),
-                              const SizedBox(
-                                width: 5,
+                              SizedBox(
+                                width: 2.w,
                               ),
                               Text(
                                 'Like',
@@ -391,7 +417,7 @@ class NewsScreen extends StatelessWidget {
                                           ? Colors.red
                                           : Colors.grey,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12.sp,
+                                      fontSize: 13.sp,
                                     ),
                               ),
                             ],

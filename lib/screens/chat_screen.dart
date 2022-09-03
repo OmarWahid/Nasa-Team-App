@@ -1,9 +1,13 @@
+import 'package:achievement_view/achievement_view.dart';
+import 'package:achievement_view/achievement_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
@@ -130,8 +134,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             controller: scrollController,
                             itemBuilder: (context, index) {
                               if (chatList[index].senderId == widget.user.uId) {
-                                return buildItemMyMessage(
-                                    context, chatList[index],chatsId[index] , index);
+                                return buildItemMyMessage(context,
+                                    chatList[index], chatsId[index], index);
                               }
                               return buildItemMessage(
                                   context, chatList[index], index);
@@ -194,9 +198,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                   );
                                 }
                               },
-                              textDirection:(yourComment.contains(RegExp(r'[أ-ي]')))
-                                  ? TextDirection.rtl
-                                  : TextDirection.ltr,
+                              textDirection:
+                                  (yourComment.contains(RegExp(r'[أ-ي]')))
+                                      ? TextDirection.rtl
+                                      : TextDirection.ltr,
                               onChanged: (value) {
                                 setState(() {
                                   yourComment = value;
@@ -271,110 +276,157 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: EdgeInsets.only(
         bottom: index == 0 ? 9.h : 0.h,
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 5.h,
-            ),
-            child: InkWell(
-              onTap: () {
-                DisplayPlayPhoto(url: model.image!, context: context);
-              },
-              child: CircleAvatar(
-                radius: 25.r,
-                backgroundColor: Colors.white,
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: model.image!,
-                    fit: BoxFit.cover,
-                    height: 50.h,
-                    width: 50.w,
-                    placeholder: (context, url) {
-                      return const Center(
-                        child: CupertinoActivityIndicator(
-                          color: Colors.deepPurple,
-                        ),
-                      );
-                    },
+      child: FocusedMenuHolder(
+        menuWidth: MediaQuery.of(context).size.width * 0.3,
+        blurSize: 1,
+        menuItemExtent: 45,
+        menuBoxDecoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(15.r))),
+        duration: Duration(milliseconds: 0),
+        animateMenuItems: false,
+        blurBackgroundColor: Colors.white,
+        openWithTap: false,
+        menuOffset: 10.0,
+        bottomOffsetHeight: 80.0,
+        menuItems: [
+          FocusedMenuItem(
+              title: Text("Copy",
+                style: TextStyle( color: Colors.white),),
+              backgroundColor: Colors.deepPurpleAccent,
+              trailingIcon: Icon(Icons.content_copy,color: Colors.white,),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: model.text));
+                Fluttertoast.showToast(
+                    msg: "Copied to clipboard",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.black87,
+                    textColor: Colors.white,
+                    fontSize: 13.sp);
+              }),
+          FocusedMenuItem(
+              title: Text(
+                "Report",
+                style: TextStyle(height: 1.2, color: Colors.white),
+              ),
+              backgroundColor: Colors.deepPurpleAccent,
+              trailingIcon: Icon(
+                Icons.report_gmailerrorred_sharp,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                showMessage(context);
+              }),
+        ],
+        onPressed: () {},
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: 5.h,
+              ),
+              child: InkWell(
+                onTap: () {
+                  DisplayPlayPhoto(url: model.image!, context: context);
+                },
+                child: CircleAvatar(
+                  radius: 25.r,
+                  backgroundColor: Colors.white,
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: model.image!,
+                      fit: BoxFit.cover,
+                      height: 50.h,
+                      width: 50.w,
+                      placeholder: (context, url) {
+                        return const Center(
+                          child: CupertinoActivityIndicator(
+                            color: Colors.deepPurple,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: 8.w,
-          ),
-          Expanded(
-            child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: (model.name! == 'Omar Wahid')
-                        ? CrossAxisAlignment.center
-                        : CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(model.name!,
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          )),
-                      if (model.name! == 'Omar Wahid')
+            SizedBox(
+              width: 8.w,
+            ),
+            Expanded(
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: (model.name! == 'Omar Wahid')
+                          ? CrossAxisAlignment.center
+                          : CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(model.name!,
+                            style: TextStyle(
+                              fontSize: 12.5.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            )),
+                        if (model.name! == 'Omar Wahid')
+                          SizedBox(
+                            width: 3.w,
+                          ),
+                        if (model.name! == 'Omar Wahid')
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.blue,
+                            size: 16.1.w,
+                          ),
                         SizedBox(
-                          width: 3.w,
+                          width: 5.w,
                         ),
-                      if (model.name! == 'Omar Wahid')
-                        Icon(
-                          Icons.check_circle,
-                          color: Colors.blue,
-                          size: 16.1.w,
+                        Text(
+                          finalStr,
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                                fontSize: 9.5.sp,
+                              ),
                         ),
-                      SizedBox(
-                        width: 5.w,
-                      ),
-                      Text(
-                        finalStr,
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                              fontSize: 9.5.sp,
-                            ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.w,
-                      vertical: 9.h,
+                      ],
                     ),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadiusDirectional.only(
-                          topEnd: Radius.circular(15.r),
-                          bottomStart: Radius.circular(25.r),
-                          bottomEnd: Radius.circular(15.r),
-                        )),
-                    // child: Text('${message.text}'),
-                    child: Text(model.text!,
-                        textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
-                            ? TextDirection.rtl
-                            : TextDirection.ltr,
-                        style: TextStyle(height: 1.1.h)),
-                  ),
-                ],
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 9.h,
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadiusDirectional.only(
+                            topEnd: Radius.circular(15.r),
+                            bottomStart: Radius.circular(25.r),
+                            bottomEnd: Radius.circular(15.r),
+                          )),
+                      // child: Text('${message.text}'),
+                      child: Text(model.text!,
+                          textDirection:
+                              (model.text!.contains(RegExp(r'[أ-ي]')))
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
+                          style: TextStyle(height: 1.1.h)),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildItemMyMessage(context, ChatModel model,chatsId, index) {
+  Widget buildItemMyMessage(context, ChatModel model, chatsId, index) {
     String givenStr = model.time!;
     String finalStr = givenStr.substring(14, 19) + givenStr.substring(22);
     return Padding(
@@ -396,9 +448,30 @@ class _ChatScreenState extends State<ChatScreen> {
           openWithTap: false,
           menuOffset: 10.0,
           bottomOffsetHeight: 80.0,
-          menuItems :[
+          menuItems: [
             FocusedMenuItem(
-              backgroundColor: Colors.deepPurpleAccent,
+                title: Text(
+                  "Copy",
+                  style: TextStyle(color: Colors.white),
+                ),
+                backgroundColor: Colors.deepPurpleAccent,
+                trailingIcon: Icon(
+                  Icons.content_copy,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: model.text));
+                  Fluttertoast.showToast(
+                      msg: "Copied to clipboard",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black87,
+                      textColor: Colors.white,
+                      fontSize: 13.sp);
+                }),
+            FocusedMenuItem(
+                backgroundColor: Colors.deepPurpleAccent,
                 title: Text(
                   "Delete",
                   style: TextStyle(color: Colors.white, height: 1.2),
@@ -441,7 +514,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 onPressed: () async {
                                   await NasaCubit.get(context)
                                       .deleteMessageChat(
-                                      chatId: chatsId,
+                                    chatId: chatsId,
                                   );
                                   Navigator.pop(context);
                                 },
@@ -480,10 +553,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         );
                       });
                 }),
-
           ],
           onPressed: () {},
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -534,5 +605,25 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
+  }
+
+  void showMessage(BuildContext context) {
+    AchievementView(context,
+        alignment: Alignment.center,
+        title: "Thank You !!",
+        subTitle: "We\'ve received your report and we will investigate",
+        textStyleSubTitle: TextStyle(fontSize: 13.5.sp, height: 1.35),
+        textStyleTitle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
+        typeAnimationContent: AnimationTypeAchievement.fadeSlideToLeft,
+        icon: Icon(
+          Icons.insert_emoticon,
+          color: Colors.white,
+          size: 30.w,
+        ),
+        color: Colors.deepPurpleAccent,
+        isCircle: true, listener: (status) {
+      print(status);
+    })
+      ..show();
   }
 }
