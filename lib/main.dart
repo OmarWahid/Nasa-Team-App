@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
-import 'package:nasa_app/layout/home_layout.dart';
 import 'package:nasa_app/network/cache_helper.dart';
-import 'package:nasa_app/screens/login/login.dart';
-import 'package:nasa_app/screens/login/onBoarding.dart';
-import 'package:nasa_app/shared/component.dart';
+import 'package:nasa_app/screens/splach_screen.dart';
 import 'all_cubit/login_cubit/cubit.dart';
 import 'network/bloc_obserp.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -55,20 +51,6 @@ void main() async {
   timeago.setLocaleMessages('en', timeago.EnMessages());
   // timeago.setLocaleMessages('en_short', timeago.EnShortMessages());
 
-  uId = await CacheHelper.getData(key: 'uId');
-  bool? ifOnBoarding = CacheHelper.getData(key: 'onBoarding');
-
-  Widget? widget;
-
-  if (ifOnBoarding != null) {
-    if (uId != null) {
-      widget = const NasaLayout();
-    } else {
-      widget = const LoginScreen();
-    }
-  } else {
-    widget = const OnBoarding();
-  }
 
 
   Bloc.observer = MyBlocObserver();
@@ -76,13 +58,12 @@ void main() async {
   // runApp(DevicePreview(
   //  builder: (context) => MyApp(myHome: widget!)));
 
-  runApp(MyApp(myHome: widget));
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Widget myHome;
 
-  const MyApp({required this.myHome, Key? key}) : super(key: key);
+  const MyApp({ Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -145,7 +126,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             themeMode: ThemeMode.light,
-            home: myHome,
+            home: MyCustomSplashScreen(),
           ),
         );
       },

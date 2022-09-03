@@ -82,99 +82,175 @@ class NasaLayout extends StatelessWidget {
             ),
           );
         }
-        return Scaffold(
-          extendBody: true,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  BouncyPage(
-                      widget: ChatScreen(
-                        user: cubit.userData!,
-                      ),
-                      curve: Curves.easeOutBack));
-            },
-            child: Icon(
-              IconBroken.Chat,
-              size: 29.w,
-            ),
-            backgroundColor: Colors.deepPurple,
-          ),
-          extendBodyBehindAppBar:
-              (cubit.status == ConnectivityResult.none) ? false : true,
-          appBar: appBar,
-          backgroundColor: Colors.white,
-          body: Column(
-            children: [
-              if (cubit.status == ConnectivityResult.none)
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 12.h,
-                    right: 9.w,
-                    left: 9.w,
-                  ),
-                  child: AnimatedContainer(
-                    decoration: BoxDecoration(
-                      color: Colors.red, //Color(0xFFEE4400),
-                      borderRadius: BorderRadius.circular(45.r),
+        return WillPopScope(
+          onWillPop: () async {
+            final value = await showDialog<bool>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.r)),
+                    actionsPadding: EdgeInsetsDirectional.only(
+                      bottom: 10.h,
                     ),
-                    duration: const Duration(milliseconds: 300),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "OFFLINE",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          SizedBox(
-                            width: 12.0,
-                            height: 12.0,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.0,
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
+                    title: Text('Are you sure?',
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    content: Text('Do you want to exit this app ?',
+                        style: TextStyle(
+                          height: 1.3.h,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    actionsAlignment: MainAxisAlignment.spaceEvenly,
+                    actions: [
+                      Container(
+                        width: 100.w,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: MaterialButton(
+                          onPressed: () {
+                            return Navigator.of(context).pop(true);
+                          },
+                          child: Text(
+                            'Yes',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
                             ),
                           ),
-                        ],
+                        ),
+                      ),
+                      Container(
+                        width: 100.w,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: MaterialButton(
+                          onPressed: () {
+                            return Navigator.of(context).pop(false);
+                          },
+                          child: Text(
+                            'No',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                });
+            if (value != null) {
+              return Future.value(value);
+            } else {
+              return Future.value(false);
+            }
+          },
+          child: Scaffold(
+            extendBody: true,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    BouncyPage(
+                        widget: ChatScreen(
+                          user: cubit.userData!,
+                        ),
+                        curve: Curves.easeOutBack));
+              },
+              child: Icon(
+                IconBroken.Chat,
+                size: 29.w,
+              ),
+              backgroundColor: Colors.deepPurple,
+            ),
+            extendBodyBehindAppBar:
+                (cubit.status == ConnectivityResult.none) ? false : true,
+            appBar: appBar,
+            backgroundColor: Colors.white,
+            body: Column(
+              children: [
+                if (cubit.status == ConnectivityResult.none)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 12.h,
+                      right: 9.w,
+                      left: 9.w,
+                    ),
+                    child: AnimatedContainer(
+                      decoration: BoxDecoration(
+                        color: Colors.red, //Color(0xFFEE4400),
+                        borderRadius: BorderRadius.circular(45.r),
+                      ),
+                      duration: const Duration(milliseconds: 300),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "OFFLINE",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            SizedBox(
+                              width: 12.0,
+                              height: 12.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                Expanded(child: cubit.screens[cubit.currentIndex]),
+              ],
+            ),
+            bottomNavigationBar: CurvedNavigationBar(
+              items: [
+                Icon(
+                  Icons.home,
+                  color: Colors.white,
+                  size: 26.w,
                 ),
-              Expanded(child: cubit.screens[cubit.currentIndex]),
-            ],
-          ),
-          bottomNavigationBar: CurvedNavigationBar(
-            items: [
-              Icon(
-                Icons.home,
-                color: Colors.white,
-                size: 26.w,
-              ),
-              Icon(
-                Icons.newspaper_rounded,
-                color: Colors.white,
-                size: 25.w,
-              ),
-              Icon(
-                Icons.settings,
-                color: Colors.white,
-                size: 26.w,
-              ),
-            ],
-            index: cubit.currentIndex,
-            color: Colors.deepPurple,
-            buttonBackgroundColor: Colors.deepPurple.shade300,
-            backgroundColor: Colors.transparent,
-            animationDuration: Duration(milliseconds: 400),
-            height: 43.h,
-            animationCurve: Curves.easeInOut,
-            onTap: (index) {
-              cubit.changeScreen(index);
-            },
+                Icon(
+                  Icons.newspaper_rounded,
+                  color: Colors.white,
+                  size: 25.w,
+                ),
+                Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                  size: 26.w,
+                ),
+              ],
+              index: cubit.currentIndex,
+              color: Colors.deepPurple,
+              buttonBackgroundColor: Colors.deepPurple.shade300,
+              backgroundColor: Colors.transparent,
+              animationDuration: Duration(milliseconds: 400),
+              height: 43.h,
+              animationCurve: Curves.easeInOut,
+              onTap: (index) {
+                cubit.changeScreen(index);
+              },
+            ),
           ),
         );
       },

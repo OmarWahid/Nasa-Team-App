@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 import 'package:nasa_app/model/chat_model.dart';
 import 'package:nasa_app/screens/search_screen.dart';
@@ -20,7 +22,7 @@ var scrollController = ScrollController();
 class ChatScreen extends StatefulWidget {
   final SocialModel user;
 
- const ChatScreen({required this.user, Key? key}) : super(key: key);
+  const ChatScreen({required this.user, Key? key}) : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -85,9 +87,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: IconButton(
                     icon: const Icon(IconBroken.Search, color: Colors.white),
                     onPressed: () {
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(
-                     chatListSearch: chatList,
-                   )));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchScreen(
+                                    chatListSearch: chatList,
+                                  )));
                     },
                   ),
                 ),
@@ -101,8 +106,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       .orderBy('time', descending: true)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    print('7777777777777777777 is Working 7777777777777777777777');
-
+                    print(
+                        '7777777777777777777 is Working 7777777777777777777777');
+                    List<String> chatsId = [];
                     chatList = [];
                     if (snapshot.hasData) {
                       print('8888888888888888 is Working 8888888888888888888');
@@ -110,6 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       for (var element in snapshot.data!.docs) {
                         chatList.add(ChatModel.fromJson(
                             element.data() as Map<String, dynamic>));
+                        chatsId.add(element.id);
                       }
                       return Expanded(
                         child: Padding(
@@ -124,7 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             itemBuilder: (context, index) {
                               if (chatList[index].senderId == widget.user.uId) {
                                 return buildItemMyMessage(
-                                    context, chatList[index], index);
+                                    context, chatList[index],chatsId[index] , index);
                               }
                               return buildItemMessage(
                                   context, chatList[index], index);
@@ -256,7 +263,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget buildItemMessage(context, ChatModel model, index) {
     String givenStr = model.time!;
-    String finalStr = givenStr.substring(14, 18) + givenStr.substring(21);
+    String finalStr = givenStr.substring(14, 19) + givenStr.substring(22);
     return Padding(
       padding: EdgeInsets.only(
         bottom: index == 0 ? 9.h : 0.h,
@@ -269,8 +276,8 @@ class _ChatScreenState extends State<ChatScreen> {
               top: 5.h,
             ),
             child: InkWell(
-              onTap: (){
-                DisplayPlayPhoto(url: model.image!,context: context);
+              onTap: () {
+                DisplayPlayPhoto(url: model.image!, context: context);
               },
               child: CircleAvatar(
                 radius: 25.r,
@@ -323,7 +330,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         Icon(
                           Icons.check_circle,
                           color: Colors.blue,
-                          size: 16.7.w,
+                          size: 16.1.w,
                         ),
                       SizedBox(
                         width: 5.w,
@@ -364,62 +371,163 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget buildItemMyMessage(context, ChatModel model, index) {
+  Widget buildItemMyMessage(context, ChatModel model,chatsId, index) {
     String givenStr = model.time!;
-    String finalStr = givenStr.substring(14, 18) + givenStr.substring(21);
+    String finalStr = givenStr.substring(14, 19) + givenStr.substring(22);
     return Padding(
       padding: EdgeInsets.only(
         bottom: index == 0 ? 9.h : 0.h,
       ),
       child: Align(
         alignment: AlignmentDirectional.centerEnd,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  finalStr,
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption!
-                      .copyWith(fontSize: 9.5.sp),
+        child: FocusedMenuHolder(
+          menuWidth: MediaQuery.of(context).size.width * 0.3,
+          blurSize: 1,
+          menuItemExtent: 45,
+          menuBoxDecoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15.r))),
+          duration: Duration(milliseconds: 0),
+          animateMenuItems: false,
+          blurBackgroundColor: Colors.white,
+          openWithTap: false,
+          menuOffset: 10.0,
+          bottomOffsetHeight: 80.0,
+          menuItems :[
+            FocusedMenuItem(
+              backgroundColor: Colors.deepPurpleAccent,
+                title: Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.white, height: 1.2),
                 ),
-                SizedBox(
-                  width: 5.w,
+                trailingIcon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
                 ),
-                Text('You',
-                    style: TextStyle(
-                      fontSize: 12.5.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.r)),
+                          actionsPadding: EdgeInsetsDirectional.only(
+                            bottom: 10.h,
+                          ),
+                          title: Text('Delete Message',
+                              style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          content: Text(
+                              'Are you sure you want to delete this message?',
+                              style: TextStyle(
+                                height: 1.3.h,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          actionsAlignment: MainAxisAlignment.spaceEvenly,
+                          actions: [
+                            Container(
+                              width: 100.w,
+                              height: 40.h,
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: MaterialButton(
+                                onPressed: () async {
+                                  await NasaCubit.get(context)
+                                      .deleteMessageChat(
+                                      chatId: chatsId,
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'Yes',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 100.w,
+                              height: 40.h,
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: BorderRadius.circular(5.r),
+                              ),
+                              child: MaterialButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'No',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      });
+                }),
 
-                    )),
-              ],
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 14.w,
-                vertical: 9.h,
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.deepPurple.withOpacity(0.4),
-                  borderRadius: BorderRadiusDirectional.only(
-                    topStart: Radius.circular(15.r),
-                    bottomStart: Radius.circular(15.r),
-                    bottomEnd: Radius.circular(25.r),
-                  )),
-              // child: Text('${message.text}'),
-              child: Text(model.text!,
-                  textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
-                      ? TextDirection.rtl
-                      : TextDirection.ltr,
-                  style: TextStyle(height: 1.1.h)),
-            ),
           ],
+          onPressed: () {},
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    finalStr,
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption!
+                        .copyWith(fontSize: 9.5.sp),
+                  ),
+                  SizedBox(
+                    width: 5.w,
+                  ),
+                  Text('You',
+                      style: TextStyle(
+                        fontSize: 12.5.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      )),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 14.w,
+                  vertical: 9.h,
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.deepPurple.withOpacity(0.4),
+                    borderRadius: BorderRadiusDirectional.only(
+                      topStart: Radius.circular(15.r),
+                      bottomStart: Radius.circular(15.r),
+                      bottomEnd: Radius.circular(25.r),
+                    )),
+                // child: Text('${message.text}'),
+                child: Text(model.text!,
+                    textDirection: (model.text!.contains(RegExp(r'[أ-ي]')))
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
+                    style: TextStyle(height: 1.1.h)),
+              ),
+            ],
+          ),
         ),
       ),
     );

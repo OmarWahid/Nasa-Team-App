@@ -78,3 +78,15 @@ class GetIdPostsTest extends NasaState {}
 class SuccessGroupSendMessage extends NasaState {}
 class ErrorGroupSendMessage extends NasaState {}
 class LoadingGroupSendMessage extends NasaState {}
+
+class LoadingDeleteCommentPosts extends NasaState {}
+class SuccessDeleteCommentPosts extends NasaState {}
+class ErrorDeleteCommentPosts extends NasaState {}
+
+class LoadingEditCommentPosts extends NasaState {}
+class SuccessEditCommentPosts extends NasaState {}
+class ErrorEditCommentPosts extends NasaState {}
+
+class LoadingDeleteMessageChat extends NasaState {}
+class SuccessDeleteMessageChat extends NasaState {}
+class ErrorDeleteMessageChat extends NasaState {}

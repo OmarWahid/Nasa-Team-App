@@ -242,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 return "please enter your phone";
                               }
                               if (value.length != 11) {
-                                return "please enter a valid phone number";
+                                return "enter a valid phone number";
                               }
                               return null;
                             },
@@ -294,7 +294,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 return "please enter your password";
                               }
                               if (value.length < 8) {
-                                return "password must be at least 8 characters";
+                                return "password must be at least 8 characters or numbers";
                               }
                               if (!value.contains(RegExp(r'[a-z]')) &&
                                   !value.contains(RegExp(r'[A-Z]'))) {

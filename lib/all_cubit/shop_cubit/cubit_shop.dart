@@ -382,8 +382,72 @@ class NasaCubit extends Cubit<NasaState> {
     });
   }
 
-  bool isMessage = false;
 
+  Future<void> deleteComment({
+    required String postId,
+    required String commentId,
+  }) async{
+    emit(LoadingDeleteCommentPosts());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .delete()
+        .then((value) {
+      emit(SuccessDeleteCommentPosts());
+    }).onError((error, stackTrace) {
+      print(error);
+      emit(ErrorDeleteCommentPosts());
+    });
+  }
+
+  Future<void> deleteMessageChat({
+    required String chatId,
+  }) async{
+    emit(LoadingDeleteMessageChat());
+    FirebaseFirestore.instance
+        .collection('chat')
+        .doc(chatId)
+        .delete()
+        .then((value) {
+      emit(SuccessDeleteMessageChat());
+    }).onError((error, stackTrace) {
+      print(error);
+      emit(ErrorDeleteMessageChat());
+    });
+  }
+
+  bool isDoneEdit = false;
+  void editComment({
+    required String postId,
+    required String commentId,
+    required String text,
+  }) {
+    isDoneEdit = true;
+    print(isDoneEdit);
+    emit(LoadingEditCommentPosts());
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .update({
+      'text': text,
+    }).then((value) {
+      isDoneEdit = false;
+      print(isDoneEdit);
+
+      emit(SuccessEditCommentPosts());
+    }).onError((error, stackTrace) {
+      print(error);
+      isDoneEdit = false;
+      emit(ErrorEditCommentPosts());
+    });
+  }
+
+
+  bool isMessage = false;
   ChatModel? chatModel;
 
   void groupSendMessage({

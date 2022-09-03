@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
-import 'package:nasa_app/screens/chat_screen.dart';
 
 import '../model/chat_model.dart';
 import '../shared/component.dart';
@@ -26,12 +25,11 @@ class _SearchScreenState extends State<SearchScreen> {
   //List<dynamic> listSearch = [];
   dynamic listSearch;
   bool isNotFound = false;
+  bool isLoading = true;
   String? search;
 
   @override
   void initState() {
-    // TODO: implement initState
-    //   listSearch = PlantsCubit.get(context).blogsModel!.data!.seeds;
     listSearch = [];
     super.initState();
   }
@@ -49,16 +47,18 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     setState(() {
       search = value;
-      if(value == ''){
+      if (value == '') {
         listSearch = result;
         isNotFound = false;
-      }
-      else if  (result.isEmpty) {
+        isLoading = true;
+      } else if (result.isEmpty) {
         listSearch = result;
         isNotFound = true;
+        isLoading = false;
       } else {
         listSearch = result;
         isNotFound = false;
+        isLoading = false;
       }
     });
   }
@@ -92,13 +92,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.r),
-                          borderSide:  BorderSide(
-                              width: 3,
+                          borderSide: BorderSide(
+                            width: 3,
                             color: Colors.grey[100]!,
                           ), //<-- SEE HERE
                         ),
                         filled: true,
-                        fillColor:Colors.grey[100]!,
+                        fillColor: Colors.grey[100]!,
                         hintText: 'Search',
                         hintStyle: TextStyle(
                           fontSize: 14.sp,
@@ -135,6 +135,26 @@ class _SearchScreenState extends State<SearchScreen> {
                     SizedBox(
                       height: 24.h,
                     ),
+                    if (isLoading)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          Text('What are you looking for ?',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey[600]!,
+                              )),
+                          Image.asset('assets/images/searching-data.png',
+                              height: 250.h,
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.cover),
+                        ],
+                      ),
                     (isNotFound)
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,7 +190,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               Image.asset('assets/images/searching-error.png',
                                   height: 250.h,
-                                  width: MediaQuery.of(context).size.width ,
+                                  width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover),
                               SizedBox(
                                 height: 15.h,
