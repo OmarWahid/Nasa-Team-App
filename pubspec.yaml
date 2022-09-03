@@ -57,6 +57,7 @@ dependencies:
   liquid_progress_indicator: ^0.4.0
   focused_menu: ^1.0.5
   achievement_view: ^1.0.0
+  hidable: ^1.0.2
 
 
 
@@ -118,6 +119,9 @@ flutter:
     - family: old
       fonts:
         - asset: assets/fonts/OldSchool-Regular.ttf
+    - family: ing
+      fonts:
+        - asset: assets/fonts/Comicy.ttf
     - family: IconBroken
       fonts:
         - asset: assets/fonts/icons.ttf
@@ -134,10 +138,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-#  fonts:
-#    - family: Schyler
-#      fonts:
-#        - asset: fonts/Schyler-Regular.ttf
+  #  fonts:
+  #    - family: Schyler
+  #      fonts:
+  #        - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

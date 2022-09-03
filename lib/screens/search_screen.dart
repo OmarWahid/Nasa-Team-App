@@ -130,6 +130,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       keyboardType: TextInputType.text,
                       onFieldSubmitted: (value) {},
+                      textDirection: (search == null || search == '')
+                          ? TextDirection.ltr
+                          : (search!.contains(RegExp(r'[أ-ي]')))
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
                       onChanged: (value) => searchFilter(value),
                     ),
                     SizedBox(
@@ -247,7 +252,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget buildItemMyMessage(context, ChatModel model, index) {
     String givenStr = model.time!;
-    String finalStr = givenStr.substring(14, 18) + givenStr.substring(21);
+    String finalStr = givenStr.substring(14, 19) + givenStr.substring(22);
     return Padding(
       padding: EdgeInsets.only(
         bottom: index == 0 ? 9.h : 0.h,
@@ -307,7 +312,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget buildItemMessage(context, ChatModel model, index) {
     String givenStr = model.time!;
-    String finalStr = givenStr.substring(14, 18) + givenStr.substring(21);
+    String finalStr = givenStr.substring(14, 19) + givenStr.substring(22);
     return Padding(
       padding: EdgeInsets.only(
         bottom: index == 0 ? 9.h : 0.h,

@@ -56,13 +56,13 @@ class _MyCustomSplashScreenState extends State<MyCustomSplashScreen>
 
     Timer(Duration(seconds: 2), () {
       setState(() {
-        _fontSize = 1.1;
+        _fontSize = 1.07;
       });
     });
 
     Timer(Duration(seconds: 2), () {
       setState(() {
-        _containerSize = 1.4;
+        _containerSize = 1.39;
         _containerOpacity = 1;
       });
     });
@@ -103,8 +103,9 @@ class _MyCustomSplashScreenState extends State<MyCustomSplashScreen>
                   'Nasa Team',
                   style: TextStyle(
                     color: Colors.white,
-                    fontFamily: 'Jannah',
-                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    fontFamily: 'ing',
+                    //fontWeight: FontWeight.bold,
                     fontSize: animation1!.value,
                   ),
                 ),

@@ -88,9 +88,6 @@ class MyApp extends StatelessWidget {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSwatch().copyWith(
-                primary: Colors.deepPurple,
-              ),
               appBarTheme: AppBarTheme(
                 iconTheme: IconThemeData(
                   color: Colors.white,
@@ -123,7 +120,9 @@ class MyApp extends StatelessWidget {
                 type: BottomNavigationBarType.fixed,
                 selectedItemColor: Colors.white,
                 unselectedItemColor: Colors.black.withOpacity(0.8),
-              ),
+              ), colorScheme: ColorScheme.fromSwatch().copyWith(
+                primary: Colors.deepPurple,
+              ).copyWith(secondary: Colors.deepPurple),
             ),
             themeMode: ThemeMode.light,
             home: MyCustomSplashScreen(),

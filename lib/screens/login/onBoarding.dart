@@ -34,7 +34,7 @@ class _OnBoardingState extends State<OnBoarding> {
       ModelingPage(
         title: 'Our Goal is to Help Students',
         description:
-            'Do different student activities and make our college at its best',
+            'We are here to help you to find the best way to learn and develop your skills',
         image: 'assets/images/nasa logo.png',
       ),
     ];
@@ -188,17 +188,19 @@ class _OnBoardingState extends State<OnBoarding> {
                 page.title,
                 style: TextStyle(
                   fontSize: 28.sp,
-                  height: 1.3.h,
+                  height: 1.03.h,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 12.h),
               Text(
                 page.description,
                 style: TextStyle(
                   fontSize: 15.sp,
                   color: Colors.white,
+                  height: 1.1.h,
+
                 ),
               ),
             ],

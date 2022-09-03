@@ -19,6 +19,7 @@ import 'package:nasa_app/screens/department.dart';
 import 'package:nasa_app/screens/news.dart';
 import 'package:nasa_app/screens/setting.dart';
 import 'package:nasa_app/shared/component.dart';
+import '../../layout/home_layout.dart';
 import '../../screens/login/login.dart';
 
 class NasaCubit extends Cubit<NasaState> {
@@ -37,8 +38,12 @@ class NasaCubit extends Cubit<NasaState> {
 
   int currentIndex = 0;
   List<Widget> screens = [
-    const DepartScreen(),
-    const NewsScreen(),
+     DepartScreen(
+      scrollController: scrollController,
+    ),
+     NewsScreen(
+      scrollController: scrollController,
+    ),
     const SettingScreen(),
   ];
 

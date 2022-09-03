@@ -87,6 +87,10 @@ class EditCommentScreen extends StatelessWidget {
                           child: TextFormField(
                             controller: commentController,
                             cursorColor: Colors.black,
+                            textDirection: (commentController.text
+                                    .contains(RegExp(r'[أ-ي]')))
+                                ? TextDirection.rtl
+                                : TextDirection.ltr,
                             decoration: const InputDecoration(
                               hintText: 'Comment ...',
                               border: InputBorder.none,
@@ -96,14 +100,14 @@ class EditCommentScreen extends StatelessWidget {
                       ),
                       NasaCubit.get(context).isDoneEdit
                           ? Padding(
-                        padding: EdgeInsets.only(
-                          right: 15.w,
-                        ),
-                        child: CupertinoActivityIndicator(
-                          color: Colors.deepPurple,
-                          radius: 12.w,
-                        ),
-                      )
+                              padding: EdgeInsets.only(
+                                right: 15.w,
+                              ),
+                              child: CupertinoActivityIndicator(
+                                color: Colors.deepPurple,
+                                radius: 12.w,
+                              ),
+                            )
                           : Container(
                               height: 49.h,
                               color: Colors.deepPurple,

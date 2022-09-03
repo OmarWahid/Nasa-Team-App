@@ -226,6 +226,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                             NasaCubit.get(context).postIdTest);
                                   }
                                 },
+                              textDirection:(yourComment.contains(RegExp(r'[أ-ي]')))
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
                                 onChanged: (value) {
                                   setState(() {
                                     yourComment = value;
@@ -453,9 +456,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 FocusedMenuItem(
                     title: Text(
                       "Report",
-                      style: TextStyle(height: 1.2),
+                      style: TextStyle(height: 1.2, color: Colors.redAccent),
                     ),
-                    trailingIcon: Icon(Icons.report_gmailerrorred_sharp),
+                    trailingIcon: Icon(
+                      Icons.report_gmailerrorred_sharp,
+                      color: Colors.redAccent,
+                    ),
                     onPressed: () {
                       showMessage(context);
                     }),
@@ -599,7 +605,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
         title: "Thank You !!",
         subTitle: "We\'ve received your report and we will investigate",
         textStyleSubTitle: TextStyle(fontSize: 13.5.sp, height: 1.35),
-        textStyleTitle: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w700),
+        textStyleTitle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
         typeAnimationContent: AnimationTypeAchievement.fadeSlideToLeft,
         icon: Icon(
           Icons.insert_emoticon,
@@ -607,8 +613,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
           size: 30.w,
         ),
         color: Colors.deepPurpleAccent,
-        isCircle: true,
-        listener: (status) {
+        isCircle: true, listener: (status) {
       print(status);
     })
       ..show();

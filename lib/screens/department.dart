@@ -73,7 +73,10 @@ List<DeepModel> list = [
 ];
 
 class DepartScreen extends StatelessWidget {
-  const DepartScreen({Key? key}) : super(key: key);
+  final scrollController;
+
+  const DepartScreen({required this.scrollController, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,24 +88,44 @@ class DepartScreen extends StatelessWidget {
         var cubit = NasaCubit.get(context);
 
         return Padding(
-          padding:  EdgeInsets.only(
+          padding: EdgeInsets.only(
             top: 12.h,
-            bottom: 8.292.h,
             right: 9.w,
             left: 9.w,
           ),
           child: ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) => (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond|| cubit.isDonePosts)
+            physics: const ClampingScrollPhysics(),
+            controller: scrollController,
+            itemBuilder: (context, index) => (cubit.isDoneUser ||
+                    cubit.isDoneNasa ||
+                    cubit.isDoneSecond ||
+                    cubit.isDonePosts)
                 ? getItemShimmer()
                 : FadeAnimation(
-              (index == 6 || index == 5)
-                  ? (index == 5)
-                  ? (index - 1)
-                  : (index - 4.9)
-                  : (index - 0.269),
-              _buildItem(list[index], context)),
-      separatorBuilder: (context, index) =>  SizedBox(height: 13.h,),
+                    // (index == 6 || index == 5)
+                    //     ? (index == 5)
+                    //         ? (index - 1)
+                    //         : (index - 4.9)
+                    //     : (index - 0.269)
+                    (index == 0)
+                        ? 0.2
+                        : (index == 1)
+                            ? 0.6
+                            : (index == 2)
+                                ? 1
+                                : (index == 3)
+                                    ? 1.4
+                                    : (index == 4)
+                                        ? 1.8
+                                        : (index == 5)
+                                            ? 2.2
+                                            : (index == 6)
+                                                ? 0.3
+                                                : 0.3,
+                    _buildItem(list[index], context, index)),
+            separatorBuilder: (context, index) => SizedBox(
+              height: 13.h,
+            ),
             itemCount: list.length,
           ),
         );
@@ -110,77 +133,82 @@ class DepartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(DeepModel data, context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(context,
-            BouncyPage(widget: data.widget!, curve: Curves.fastOutSlowIn));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
-          color: Colors.deepPurple,
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                left: 10.w,
-                top: 10.h,
-                bottom: 10.h,
-              ),
-              child: Container(
-                height: 109.h,
-                width: 116.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  image: DecorationImage(
-                    image: AssetImage('${data.image}'),
-                    fit: BoxFit.cover,
+  Widget _buildItem(DeepModel data, context, index) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: (index == 6) ? 13.h : 0.h,
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              BouncyPage(widget: data.widget!, curve: Curves.fastOutSlowIn));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14.r),
+            color: Colors.deepPurple,
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 10.w,
+                  top: 10.h,
+                  bottom: 10.h,
+                ),
+                child: Container(
+                  height: 109.h,
+                  width: 116.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    image: DecorationImage(
+                      image: AssetImage('${data.image}'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 9.w,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${data.title}',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+              SizedBox(
+                width: 9.w,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${data.title}',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    '${data.description}',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      color: Colors.grey,
+                    Text(
+                      '${data.description}',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.grey,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                right: 11.w,
+              Padding(
+                padding: EdgeInsets.only(
+                  right: 11.w,
+                ),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 25.w,
+                  color: Colors.white,
+                ),
               ),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 25.w,
-                color: Colors.white,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -194,6 +194,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                   );
                                 }
                               },
+                              textDirection:(yourComment.contains(RegExp(r'[أ-ي]')))
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
                               onChanged: (value) {
                                 setState(() {
                                   yourComment = value;
