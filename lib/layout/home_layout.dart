@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,7 @@ class NasaLayout extends StatelessWidget {
         AppBar appBar = AppBar(
             centerTitle: true,
             elevation: 0,
-            toolbarHeight: ScreenUtil().setHeight(48),
+            toolbarHeight: ScreenUtil().setHeight(41),
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -65,22 +67,24 @@ class NasaLayout extends StatelessWidget {
             cubit.isDoneNasa ||
             cubit.isDoneSecond ||
             cubit.isDonePosts) {
-          return Scaffold(
-            appBar: appBar,
-            body: Padding(
-              padding: EdgeInsets.only(
-                top: 6.h,
-                bottom: 6.h,
-                right: 6.w,
-                left: 6.w,
-              ),
-              child: ListView.separated(
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) => getItemShimmer(),
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 0.h,
+          return SafeArea(
+            child: Scaffold(
+              appBar: appBar,
+              body: Padding(
+                padding: EdgeInsets.only(
+                  top: 6.h,
+                  bottom: 6.h,
+                  right: 6.w,
+                  left: 6.w,
                 ),
-                itemCount: 7,
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) => getItemShimmer(),
+                  separatorBuilder: (context, index) => SizedBox(
+                    height: 0.h,
+                  ),
+                  itemCount: 7,
+                ),
               ),
             ),
           );
@@ -178,7 +182,7 @@ class NasaLayout extends StatelessWidget {
               backgroundColor: Colors.deepPurple,
             ),
             extendBodyBehindAppBar:
-                (cubit.status == ConnectivityResult.none) ? false : true,
+            cubit.status == ConnectivityResult.none ? false : true,
             appBar: appBar,
             backgroundColor: Colors.white,
             body: Column(
@@ -214,7 +218,7 @@ class NasaLayout extends StatelessWidget {
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.0,
                                 valueColor:
-                                    AlwaysStoppedAnimation(Colors.white),
+                                AlwaysStoppedAnimation(Colors.white),
                               ),
                             ),
                           ],
@@ -227,7 +231,6 @@ class NasaLayout extends StatelessWidget {
             ),
             bottomNavigationBar: Hidable(
               controller: scrollController,
-
               child: CurvedNavigationBar(
                 items: [
                   Icon(
@@ -283,65 +286,4 @@ class NasaLayout extends StatelessWidget {
   }
 }
 
-// import 'package:flutter/material.dart';
-// import 'package:hidable/hidable.dart';
-//
-// class HidableBtmbarExample extends StatefulWidget {
-//   const HidableBtmbarExample({Key? key}) : super(key: key);
-//
-//   @override
-//   State<HidableBtmbarExample> createState() => _HidableBtmbarExampleState();
-// }
-//
-// class _HidableBtmbarExampleState extends State<HidableBtmbarExample> {
-//   int _index = 0;
-//   final _scrollController = ScrollController();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: ListView.separated(
-//         controller: _scrollController, // !Explicitly specify the controller
-//         itemBuilder: (_, i) => Container(
-//           height: 80,
-//           color: Colors.primaries[i % Colors.primaries.length],
-//         ),
-//         separatorBuilder: (_, __) => const SizedBox(height: 10),
-//         itemCount: 100,
-//       ),
-//       bottomNavigationBar: Hidable(
-//         controller: _scrollController, // !Use the same controller
-//         child: BottomNavigationBar(
-//           currentIndex: _index,
-//           onTap: (i) => setState(() => _index = i),
-//           items: bottomBarItems(),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   List<BottomNavigationBarItem> bottomBarItems() {
-//     return [
-//       BottomNavigationBarItem(
-//         label: 'Home',
-//         icon: const Icon(Icons.home, color: Colors.white),
-//         backgroundColor: Colors.amber.withOpacity(.9),
-//       ),
-//       BottomNavigationBarItem(
-//         label: 'Favorites',
-//         icon: const Icon(Icons.favorite, color: Colors.white),
-//         backgroundColor: Colors.blue.withOpacity(.9),
-//       ),
-//       BottomNavigationBarItem(
-//         label: 'Profile',
-//         icon: const Icon(Icons.person, color: Colors.white),
-//         backgroundColor: Colors.green.withOpacity(.9),
-//       ),
-//       BottomNavigationBarItem(
-//         label: 'Settings',
-//         icon: const Icon(Icons.settings, color: Colors.white),
-//         backgroundColor: Colors.purple.withOpacity(.9),
-//       ),
-//     ];
-//   }
-// }
+

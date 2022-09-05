@@ -5,6 +5,7 @@ import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
 
 import '../../style/iCONS.dart';
+import 'about_screen.dart';
 
 class HR_screen extends StatelessWidget {
   const HR_screen({Key? key}) : super(key: key);
@@ -16,12 +17,56 @@ class HR_screen extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, state) {
-        var appbar =  AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.deepPurple,
+        var appbar =   AppBar(
+
           title: const Text('Human Resources',
               style: TextStyle(
                   fontWeight: FontWeight.w500, color: Colors.white)),
+          leading: Padding(
+            padding: EdgeInsets.only(
+              left: 0.w,
+            ),
+            child: IconButton(
+              icon: const Icon(IconBroken.Arrow___Left_2, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+
+          actions: [
+            Container(
+              width: 30.w,
+              child: IconButton(
+                icon: const Icon(IconBroken.Search, color: Colors.white),
+                onPressed: () {},
+                padding: EdgeInsets.zero,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                right: 4.w,
+              ),
+              child: IconButton(
+                icon: const Icon(IconBroken.Info_Circle, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InfoScreen(
+                            imageTitle:
+                            'https://img.freepik.com/free-photo/headhunters-interviewing-female-job-candidate_1163-4674.jpg?w=996&t=st=1662404105~exp=1662404705~hmac=a5435fc7680bed7bfeace4947712f67fc6c33f2d6612b105a5bd0288df4ba998',
+                            title: 'Human Resources',
+                            text:
+                            'إدارة الموارد البشرية (بالإنجليزية: Human Resources Management)‏، هي إدارة القوى العاملة للمنظمات أو الموارد البشرية. وتختص بجذب الموظفين، والاختيار، التدريب، التقييم ومكافأة الموظفين، وأيضاً متابعة قيادة المنظمة والثقافة التنظيمية والتأكد من الامتثال بقوانين العمل. في حالات يكون الموظفون راغبين في إجراء مفاوضات جماعية، إدارة الموارد البشرية يكون دورها التواصل المبدئي مع ممثلي الموظفين (في العادة إتحادات العمال)'
+                                'والموارد البشرية مجموع الأفراد المشكلين للقوى العاملة بمنظمة ما، أو قطاع أعمال أو اقتصاد ما. ويستخدم البعض مصطلح رأس المال البشري بشكل مترادف مع الموارد البشرية، على الرغم من رأس المال البشري عادة ما يشير إلى وجهة نظر أضيق،',
+                            imageText:
+                            'https://img.freepik.com/free-photo/african-american-people-greeting-job-interview-appointment-talking-about-hr-recruitment-work-application-man-woman-meeting-talk-about-executive-career-opportunity_482257-41875.jpg?w=1380&t=st=1662404187~exp=1662404787~hmac=e9bedd369d9bcf269ec707a400172e175e0bcae0e8b2b5ee9b9b9a9a06a8b47a',
+                          )));
+                },
+              ),
+            ),
+          ],
         );
         var cubit = NasaCubit.get(context);
         if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond) {
@@ -33,46 +78,53 @@ class HR_screen extends StatelessWidget {
           );
         }
         return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            elevation: 0,
-            toolbarHeight: ScreenUtil().setHeight(48),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(45.r),
-                  bottomRight: Radius.circular(45.r),
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.deepPurple, Colors.deepPurple],
-                ),
-              ),
-            ),
-            backgroundColor: Colors.transparent,
+          appBar:  AppBar(
+
             title: const Text('Human Resources',
                 style: TextStyle(
                     fontWeight: FontWeight.w500, color: Colors.white)),
             leading: Padding(
               padding: EdgeInsets.only(
-                left: 21.w,
+                left: 0.w,
               ),
               child: IconButton(
-                icon: const Icon(Icons.arrow_back_sharp, color: Colors.white),
+                icon: const Icon(IconBroken.Arrow___Left_2, color: Colors.white),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
             ),
+
             actions: [
-              Padding(
-                padding: EdgeInsets.only(
-                  right: 21.w,
-                ),
+              Container(
+                width: 30.w,
                 child: IconButton(
                   icon: const Icon(IconBroken.Search, color: Colors.white),
                   onPressed: () {},
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  right: 4.w,
+                ),
+                child: IconButton(
+                  icon: const Icon(IconBroken.Info_Circle, color: Colors.white),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InfoScreen(
+                              imageTitle:
+                              'https://img.freepik.com/free-photo/headhunters-interviewing-female-job-candidate_1163-4674.jpg?w=996&t=st=1662404105~exp=1662404705~hmac=a5435fc7680bed7bfeace4947712f67fc6c33f2d6612b105a5bd0288df4ba998',
+                              title: 'Human Resources',
+                              text:
+                              'إدارة الموارد البشرية (بالإنجليزية: Human Resources Management)‏، هي إدارة القوى العاملة للمنظمات أو الموارد البشرية. وتختص بجذب الموظفين، والاختيار، التدريب، التقييم ومكافأة الموظفين، وأيضاً متابعة قيادة المنظمة والثقافة التنظيمية والتأكد من الامتثال بقوانين العمل. في حالات يكون الموظفون راغبين في إجراء مفاوضات جماعية، إدارة الموارد البشرية يكون دورها التواصل المبدئي مع ممثلي الموظفين (في العادة إتحادات العمال)'
+                                  'والموارد البشرية مجموع الأفراد المشكلين للقوى العاملة بمنظمة ما، أو قطاع أعمال أو اقتصاد ما. ويستخدم البعض مصطلح رأس المال البشري بشكل مترادف مع الموارد البشرية، على الرغم من رأس المال البشري عادة ما يشير إلى وجهة نظر أضيق،',
+                              imageText:
+                              'https://img.freepik.com/free-photo/african-american-people-greeting-job-interview-appointment-talking-about-hr-recruitment-work-application-man-woman-meeting-talk-about-executive-career-opportunity_482257-41875.jpg?w=1380&t=st=1662404187~exp=1662404787~hmac=e9bedd369d9bcf269ec707a400172e175e0bcae0e8b2b5ee9b9b9a9a06a8b47a',
+                            )));
+                  },
                 ),
               ),
             ],

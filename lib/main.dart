@@ -99,7 +99,7 @@ class MyApp extends StatelessWidget {
                 actionsIconTheme: IconThemeData(
                   color: Colors.black,
                 ),
-                color: Colors.white,
+                color: Colors.deepPurple,
                 elevation: 0,
                 titleTextStyle: TextStyle(
                   color: Colors.black,

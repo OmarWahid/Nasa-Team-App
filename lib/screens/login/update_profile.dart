@@ -57,11 +57,16 @@ class UpdateScreen_ extends StatelessWidget {
           title: const Text('Edit Account',
               style:
                   TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_sharp, color: Colors.white),
-            onPressed: () {
-              Navigator.pop(context, 'refresh');
-            },
+          leading: Padding(
+            padding:  EdgeInsets.only(
+              left: 22.w,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_sharp, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context, 'refresh');
+              },
+            ),
           ),
         );
 
@@ -69,9 +74,7 @@ class UpdateScreen_ extends StatelessWidget {
           return Scaffold(
             appBar: appBar,
             body: Padding(
-              padding: EdgeInsets.only(bottom: 20.h,
-                  left: 22.w, right: 22.w
-              ),
+              padding: EdgeInsets.only(bottom: 20.h, left: 22.w, right: 22.w),
               child: Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

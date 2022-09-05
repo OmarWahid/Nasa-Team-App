@@ -102,11 +102,6 @@ class DepartScreen extends StatelessWidget {
                     cubit.isDonePosts)
                 ? getItemShimmer()
                 : FadeAnimation(
-                    // (index == 6 || index == 5)
-                    //     ? (index == 5)
-                    //         ? (index - 1)
-                    //         : (index - 4.9)
-                    //     : (index - 0.269)
                     (index == 0)
                         ? 0.2
                         : (index == 1)
