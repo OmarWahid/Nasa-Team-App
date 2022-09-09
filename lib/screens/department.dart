@@ -97,7 +97,7 @@ class DepartScreen extends StatelessWidget {
             physics: const ClampingScrollPhysics(),
             controller: scrollController,
             itemBuilder: (context, index) => (cubit.isDoneUser ||
-                    cubit.isDoneNasa ||
+                    // cubit.isDoneNasa ||
                     cubit.isDoneSecond ||
                     cubit.isDonePosts)
                 ? getItemShimmer()
@@ -136,7 +136,7 @@ class DepartScreen extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.push(context,
-              BouncyPage(widget: data.widget!, curve: Curves.fastOutSlowIn));
+              BouncyPage(widget: data.widget!, curve: Curves.elasticOut));
         },
         child: Container(
           decoration: BoxDecoration(

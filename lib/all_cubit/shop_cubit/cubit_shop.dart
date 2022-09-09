@@ -89,25 +89,26 @@ class NasaCubit extends Cubit<NasaState> {
   //     emit(ErrorGetNasaMemberData(error: error.toString()));
   //   });
   // }
-  var allData;
-  MemberTestModel? memberTestModel;
-  CollectionReference _collectionRef =
-      FirebaseFirestore.instance.collection('users');
 
-  bool isDoneNasa = true;
-
-  Future getNasa() async {
-    emit(LoadingNasaData());
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await _collectionRef.get();
-
-    // Get data from docs and convert map to List
-    allData = await querySnapshot.docs.map((doc) => doc.data()).toList();
-    isDoneNasa = false;
-    emit(SuccessNasaData());
-    // memberTestModel = MemberTestModel.fromJson(allData);
-    print(allData[0]['name']);
-  }
+  // var allData;
+  // MemberTestModel? memberTestModel;
+  // CollectionReference _collectionRef =
+  //     FirebaseFirestore.instance.collection('users');
+  //
+  // bool isDoneNasa = true;
+  //
+  // Future getNasa() async {
+  //   emit(LoadingNasaData());
+  //   // Get docs from collection reference
+  //   QuerySnapshot querySnapshot = await _collectionRef.get();
+  //
+  //   // Get data from docs and convert map to List
+  //   allData = await querySnapshot.docs.map((doc) => doc.data()).toList();
+  //   isDoneNasa = false;
+  //   emit(SuccessNasaData());
+  //   // memberTestModel = MemberTestModel.fromJson(allData);
+  //   print(allData[0]['name']);
+  // }
 
   void updateUserText({
     required String bio,

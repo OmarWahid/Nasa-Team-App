@@ -41,7 +41,7 @@ class _SettingScreenState extends State<SettingScreen> {
       builder: (context, state) {
         var cubit = NasaCubit.get(context);
         if (cubit.isDoneUser ||
-            cubit.isDoneNasa ||
+            // cubit.isDoneNasa ||
             cubit.isDoneSecond ||
             cubit.isDonePosts) {
           return Center(
@@ -444,27 +444,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                             color: Colors.deepPurple,
                                             fontWeight: FontWeight.bold,
                                           )),
-                                      // content: Column(
-                                      //   mainAxisSize: MainAxisSize.min,
-                                      //   mainAxisAlignment:
-                                      //       MainAxisAlignment.center,
-                                      //   children: [
-                                      //     Text(
-                                      //         'جميع الحقوق محفوظة لصالح Omar-Wahid©',
-                                      //         textDirection: TextDirection.rtl,
-                                      //         textAlign: TextAlign.center,
-                                      //         style: TextStyle(
-                                      //             // fontWeight: FontWeight.bold,
-                                      //
-                                      //             )),
-                                      //     Text('NASA | ناسا \n2022©',
-                                      //         textDirection: TextDirection.rtl,
-                                      //         textAlign: TextAlign.center,
-                                      //         style: TextStyle(
-                                      //           fontWeight: FontWeight.bold,
-                                      //         )),
-                                      //   ],
-                                      // ),
+
                                       content: RichText(
                                         textAlign: TextAlign.center,
                                         textDirection: TextDirection.rtl,

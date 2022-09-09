@@ -36,7 +36,7 @@ class OR_screen extends StatelessWidget {
 
           actions: [
             Container(
-              width: 30.w,
+              width: 33.w,
               child: IconButton(
                 icon: const Icon(IconBroken.Search, color: Colors.white),
                 onPressed: () {},
@@ -45,7 +45,7 @@ class OR_screen extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
-                right: 4.w,
+                right: 5.w,
               ),
               child: IconButton(
                 icon: const Icon(IconBroken.Info_Circle, color: Colors.white),
@@ -69,7 +69,9 @@ class OR_screen extends StatelessWidget {
           ],
         );
         var cubit = NasaCubit.get(context);
-        if (cubit.isDoneUser || cubit.isDoneNasa || cubit.isDoneSecond) {
+        if (cubit.isDoneUser ||
+            // cubit.isDoneNasa ||
+            cubit.isDoneSecond) {
           return Scaffold(
             appBar: appbar,
             body: Center(
@@ -97,7 +99,7 @@ class OR_screen extends StatelessWidget {
 
             actions: [
               Container(
-                width: 30.w,
+                width: 33.w,
                 child: IconButton(
                   icon: const Icon(IconBroken.Search, color: Colors.white),
                   onPressed: () {},
@@ -106,7 +108,7 @@ class OR_screen extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  right: 4.w,
+                  right: 5.w,
                 ),
                 child: IconButton(
                   icon: const Icon(IconBroken.Info_Circle, color: Colors.white),

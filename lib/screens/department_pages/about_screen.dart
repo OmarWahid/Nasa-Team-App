@@ -73,11 +73,15 @@ class _InfoScreenState extends State<InfoScreen> {
                     ],
                   ),
                   background: CachedNetworkImage(
-                    imageUrl: widget.imageTitle,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
+                      imageUrl: widget.imageTitle,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      placeholder: (context, url) => Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )),
                 ),
               ),
             ),
@@ -86,7 +90,7 @@ class _InfoScreenState extends State<InfoScreen> {
         body: Builder(builder: (BuildContext context) {
           return Padding(
             padding:
-                 EdgeInsets.only(top: 12.h, bottom: 0, left: 14.w, right: 14.w),
+                EdgeInsets.only(top: 12.h, bottom: 0, left: 14.w, right: 14.w),
             child: CustomScrollView(
               slivers: [
                 SliverOverlapInjector(
@@ -101,7 +105,6 @@ class _InfoScreenState extends State<InfoScreen> {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontFamily: 'Jannah',
-
                     ),
                   ),
                 ),
@@ -134,7 +137,6 @@ class _InfoScreenState extends State<InfoScreen> {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontFamily: 'Jannah',
-
                       ),
                     ),
                   ),

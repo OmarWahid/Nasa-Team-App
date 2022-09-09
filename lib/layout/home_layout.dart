@@ -64,7 +64,7 @@ class NasaLayout extends StatelessWidget {
         width = MediaQuery.of(context).size.width;
         var cubit = NasaCubit.get(context);
         if (cubit.isDoneUser ||
-            cubit.isDoneNasa ||
+            // cubit.isDoneNasa ||
             cubit.isDoneSecond ||
             cubit.isDonePosts) {
           return SafeArea(

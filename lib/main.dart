@@ -81,7 +81,6 @@ class MyApp extends StatelessWidget {
                 ..checkInternet()
                 ..getUserData()
                 ..getSomeSecond()
-                ..getNasa()
                 ..getPosts(),
             ),
           ],

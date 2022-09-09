@@ -39,5 +39,6 @@ Future<void> DisplayPlayPhoto ({required String url,context}) async {
             );
           },
         ),
-      ));
+      )
+  );
 }

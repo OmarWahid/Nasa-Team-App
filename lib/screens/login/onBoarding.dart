@@ -23,6 +23,21 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding> {
+
+  Image? image1;
+
+  @override
+  void initState() {
+    super.initState();
+    image1 = Image.asset("assets/images/back_1.jpg");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    precacheImage(image1!.image, context);
+  }
   @override
   Widget build(BuildContext context) {
     List<ModelingPage> listPages = [
@@ -57,9 +72,9 @@ class _OnBoardingState extends State<OnBoarding> {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/back_1.jpg'),
+            image: image1!.image,
             fit: BoxFit.cover,
           ),
         ),

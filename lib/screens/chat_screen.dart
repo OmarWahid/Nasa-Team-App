@@ -54,7 +54,7 @@ class _ChatScreenState extends State<ChatScreen> {
             appBar: AppBar(
               centerTitle: true,
               elevation: 0,
-              toolbarHeight: ScreenUtil().setHeight(48),
+              toolbarHeight: ScreenUtil().setHeight(42),
               flexibleSpace: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(

@@ -27,7 +27,7 @@ class NewsScreen extends StatelessWidget {
         builder: (context, state) {
           var cubit = NasaCubit.get(context);
           if (cubit.isDoneUser ||
-              cubit.isDoneNasa ||
+              // cubit.isDoneNasa ||
               cubit.isDoneSecond ||
               cubit.isDonePosts) {
             return Center(
@@ -202,44 +202,41 @@ class NewsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: InkWell(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 4.h),
-                          child: Row(
-                            children: [
-                              Icon(
-                                IconBroken.Heart,
-                                size: 17.w,
-                                color: Colors.red,
-                              ),
-                              SizedBox(
-                                width: 4.w,
-                              ),
-                              StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc(NasaCubit.get(context).postsId[index])
-                                    .collection('likes')
-                                    .snapshots(),
-                                builder: (context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(
-                                      '${snapshot.data!.docs.length + 11}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          ?.copyWith(height: 1.6),
-                                    );
-                                  } else {
-                                    return const Text('7');
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Row(
+                          children: [
+                            Icon(
+                              IconBroken.Heart,
+                              size: 17.w,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              width: 4.w,
+                            ),
+                            StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('posts')
+                                  .doc(NasaCubit.get(context).postsId[index])
+                                  .collection('likes')
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    '${snapshot.data!.docs.length + 11}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        ?.copyWith(height: 1.6),
+                                  );
+                                } else {
+                                  return const Text('7');
+                                }
+                              },
+                            ),
+                          ],
                         ),
-                        onTap: () {},
                       ),
                     ),
                     Expanded(
@@ -401,7 +398,6 @@ class NewsScreen extends StatelessWidget {
                                         (isLikeMany) ? Colors.red : Colors.grey,
                                   );
                                 },
-
                                 size: 19.5.w,
                               ),
                               SizedBox(

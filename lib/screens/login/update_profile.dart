@@ -6,8 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/cubit_shop.dart';
 import 'package:nasa_app/all_cubit/shop_cubit/states_shop.dart';
-
-import '../../shared/component.dart';
 import '../../style/iCONS.dart';
 
 var controllerBio = TextEditingController();
@@ -275,8 +273,9 @@ class UpdateScreen_ extends StatelessWidget {
                             'UPDATE',
                             style: TextStyle(
                               fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                               color: Colors.white,
+                              letterSpacing: 1.25.w,
                             ),
                           ),
                         ),

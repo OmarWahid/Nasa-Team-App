@@ -31,9 +31,12 @@ class _RegisterScreenState extends State<RegisterScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
+  Image? image1;
+
   @override
   void initState() {
     super.initState();
+    image1 = Image.asset("assets/images/10_FEB_10.jpg");
     _controller = AnimationController(
       vsync: this,
     );
@@ -44,6 +47,13 @@ class _RegisterScreenState extends State<RegisterScreen>
       }
     });
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(image1!.image, context);
+  }
+
 
   @override
   void dispose() {
@@ -141,9 +151,9 @@ class _RegisterScreenState extends State<RegisterScreen>
             ),
           ),
           body: Container(
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/10_FEB_10.jpg'),
+                image: image1!.image,
                 fit: BoxFit.cover,
               ),
             ),
