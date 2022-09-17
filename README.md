@@ -2,7 +2,7 @@
 
 <h2 align="center"> Hi there, I'm Omar Wahid <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="25px" height ="25px"> </h2>
 
-<h3 align="center">Mobile application developer using flutter technology 👑</h3>
+<h3 align="center">👑 mobile application developer using flutter technology 👑</h3>
 
 <img align="right" alt="Coding" width="400" src="https://cdn.dribbble.com/users/1162077/screenshots/3848914/programmer.gif">
 
